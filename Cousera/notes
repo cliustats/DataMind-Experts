@@ -1,0 +1,113 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+
+#######################
+###  tuple vs list  ###
+#######################
+
+ls = ['foo', 'peekaboo', 'baz']
+ls.append('dwarf')
+ls.insert(1, 'red')      # computational expensive, use collections.deque (double-ended queue)
+ls.pop(2)                # removes and returns an element at a particular index
+ls.remove('foo')         # remove by value, locates the first such value and removes
+ele in / not in ls
+
+x = [4, None, 'foo']
+x.extend([7, 8, (2, 3)])
+==> x = [4, None, 'foo', 7, 8, (2, 3)]
+
+Note that list concatenation by addition is a comparatively expensive operation since a new list must be created and
+the objects copied over. Using extend to append elements to an existing list, especially if you are building up a
+large list, is usually pref‐ erable. Thus,
+
+everything = []
+for chunk in list_of_lists:
+    everything.extend(chunk)
+
+is faster than the concatenative alternative:
+
+everything = []
+for chunk in list_of_lists:
+    everything = everything + chunk
+
+
+ls.sort()   # sort in-place (without creating a new object)
+
+b = ['saw', 'small', 'He', 'foxes', 'six']
+b.sort(key=len)
+==> b = ['He', 'saw', 'six', 'small', 'foxes']
+
+import bisect   # doesn't check whether the list is sorted
+
+c=[1,2,2,2,3,4,7]
+bisect.bisect(c, 2)  ==> 4
+bisect.bisect(c, 5)  ==> 6
+bisect.insort(c, 6)  ==> c = [1, 2, 2, 2, 3, 4, 6, 7]
+
+
+ls[start:stop]
+ls[start:]
+ls[:stop]
+ls[-start:]
+ls[::2]   # take every other element
+ls[::-1]  # reverse a list or tuple
+
+
+dict()
+d1.update(d2)   # merge one dict into another using the update method.The update method changes dicts in-place,
+                # so any existing keys in the data passed to update will have their old values discarded.
+
+value = some_dict.get(key, default_value)
+
+
+list, set, and dict comprehensions
+[expr for val in collection if condition]
+
+Nested list comprehensions
+all_data = [['John', 'Emily', 'Michael', 'Mary', 'Steven'],
+            ['Maria', 'Juan', 'Javier', 'Natalia', 'Pilar']]
+result = [name for names in all_data for name in names if name.count('e') >= 2]
+
+
+some_tuples = [(1, 2, 3), (4, 5, 6), (7, 8, 9)]
+flattened = [x for tup in some_tuples for x in tup]
+==>  flattened = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+
+
+
+train = pd.read_csv('')
+test = pd.read_csv('')
+
+train.isnull().sum()
+
+impute_value = train['age'].median()
+
+train['age'] = train['age'].fillna(impute_value)
+
+train['IsFemale'] = (train['Sex'] == 'female').astype(int)
+
+predictors = ['Pclass', 'IsFemale', 'Age']
+X_train = train[predictors].values
+y_train = train['Survived'].values
+
+from sklearn.linear_model import LogisticRegression
+
+model = LogisticRegression()
+
+model.fit(X_train, y_train)
+
+y_predict = model.predict(X_test)
+
+
+from sklearn.linear_model import LogisticRegressionCV
+
+modelcv = LogisticRegressionCV(10)
+
+modelcv.fit(X_train, y_train)
+
+from sklearn.model_selection import cross_val_score
+
+model = LogisticRegressionCV(C=10)
