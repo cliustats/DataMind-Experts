@@ -12,3 +12,4 @@ result
 
 
 # SQL solution
+SELECT * FROM worker
