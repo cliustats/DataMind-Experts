@@ -14,3 +14,4 @@ result
 # SQL solution
 SELECT * FROM worker
 SELECT * FROM worker
+SELECT * FROM worker
