@@ -12,4 +12,4 @@ result
 
 
 # SQL solution
-SELECT * FROM worker_ref_id
+SELECT * FROM worker_id
