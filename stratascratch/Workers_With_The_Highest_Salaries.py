@@ -14,5 +14,3 @@ result
 # SQL solution
 SELECT * FROM worker_id
 SELECT * FROM worker_id
-
-  
