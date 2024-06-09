@@ -35,3 +35,28 @@ def my_dense(a_in, W, b):
         z = np.dot(w, a_in) + b[j]
         a_out[j] = g(z)
     return a_out
+
+
+
+def my_sequencial(x, W1, b1, W2, b2):
+    a1 = my_dense(x, W1, b1)
+    a2 = my_dense(a1, W2, b2)
+    return a2
+
+
+def my_predict(X, W1, b1, W2, b2):
+    m = X.shape[0]
+    p = np.zeros((m,1))
+    for i in range(m):
+        p[i, 0] = my_sequencial(X[i], W1, b1, W2, b2)
+    return p
+
+
+
+
+def my_softmax(z):
+    ez = np.exp(z)
+    sm = ez/np.sum(ez)
+    return sm
+
+print("Decisions = \n {y_hat}")
