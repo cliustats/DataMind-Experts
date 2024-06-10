@@ -55,3 +55,31 @@ for i in range(len(yhat)):
     total_squared_error += squared_error_i
 
 mse = total_squared_error / (2*len(yhat))
+
+
+X_cv_scaled = scaler_linear.transform(x_cv)
+
+
+# create the additional PolynomialFeatures
+poly = PolynomialFeatures(degree=2, include_bias=False)
+
+X_train_mapped = poly.fit_transform(x_train)
+
+scaled_poly = StandardScaler()
+
+X_train_mapped_scaled = scaled_poly.fit_transform(X_train_mapped)
+
+
+
+## adding polynomial features
+
+
+
+# select the model with the lowest error
+model_num = 3
+
+# compute the test error
+yhat = model_bc[model_num-1].predict(x_bc_test_scaled)
+yhat = tf.math.sigmoid(yhat)
+yhat = np.where(yhat >= threshold, 1, 0)
+nn_test_error = np.mean(yhat != y_bc_test)
