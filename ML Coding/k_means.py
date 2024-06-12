@@ -129,7 +129,7 @@ def kMeans_init_centroids(X, K):
     Args:
         X (ndarray): Data points
         K (int):     number of centroids/clusters
-    
+
     Returns:
         centroids (ndarray): Initialized centroids
     """
