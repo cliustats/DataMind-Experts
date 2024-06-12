@@ -112,5 +112,31 @@ def run_kMeans(X, initial_centroids, max_iters=10):
     m, n = X.shape
     K = initial_centroids.shape[0]
     centroids = initial_centroids
-    previous_centroids = initial_centroids
     idx = np.zeros(m)
+    for i in range(max_iters):
+        idx = find_closest_centroids(X, centroids)
+        centroids = compute_centroids(X, idx, K)
+
+    return centriods, idx
+
+
+# 3. Random initialization
+def kMeans_init_centroids(X, K):
+    """
+    This function initializes K centroids that are to be
+    used in K-Means on the dataset X
+
+    Args:
+        X (ndarray): Data points
+        K (int):     number of centroids/clusters
+    
+    Returns:
+        centroids (ndarray): Initialized centroids
+    """
+    # Randomly reorder the indices of examples
+    randidx = np.random.permutation(X.shape[0])
+
+    # Take the first K examples as centriods
+    centroids = X[randidx[:K]]
+
+    return centriods
