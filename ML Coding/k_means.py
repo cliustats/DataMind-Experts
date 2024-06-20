@@ -119,7 +119,7 @@ def run_kMeans(X, initial_centroids, max_iters=10):
 
     return centriods, idx
 
-
+ 
 # 3. Random initialization
 def kMeans_init_centroids(X, K):
     """
