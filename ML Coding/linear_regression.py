@@ -14,7 +14,7 @@ class LinearRegression:
         self.intercept = None
 
     def fit(self, X, y):
-        n = len(X)  
+        n = len(X)   
         x_mean = np.mean(X)
         y_mean = np.mean(y)
         numerator = 0
