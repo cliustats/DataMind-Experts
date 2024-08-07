@@ -41,7 +41,7 @@ class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
 
         left = 0
-        lookup = set()
+        lookup = set() 
         max_length = 0
 
         for right in range(len(s)):     # Since substring is continous, we need to delete all the characters
@@ -51,7 +51,7 @@ class Solution:
             lookup.add(s[right])
             max_length = max(max_length, right - left + 1)
 
-        return max_length 
+        return max_length
 
 
 ################################### PROBLEM 5 ###################################
