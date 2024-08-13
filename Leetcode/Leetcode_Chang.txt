@@ -78,7 +78,7 @@ class Solution:
                     res = s[left:right+1]
                 left -= 1
                 right += 1
-                
+
             left, right = i, i + 1
             # even length
             while left >= 0 and right < len(s) and s[left] == s[right]:
@@ -560,6 +560,12 @@ class Solution:
             if i > 0 and nums[i] == nums[i-1]:
                 continue
             self.backtrack(nums[:i]+nums[i+1:], tmp_lst + [nums[i]], output)
+
+
+################################### PROBLEM 49 ###################################/
+
+
+
 
 
 ################################### PROBLEM 69 ###################################
