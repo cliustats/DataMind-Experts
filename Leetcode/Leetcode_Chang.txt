@@ -564,6 +564,18 @@ class Solution:
 
 ################################### PROBLEM 49 ###################################/
 
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        lookup = {}
+
+        for word in strs:
+            sorted_word = "".join(sorted(word))
+            if sorted_word not in lookup:
+                lookup[sorted_word] = word
+            else:
+                lookup[sorted_word].append(word)
+
+        return lookup.values()
 
 
 
