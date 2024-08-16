@@ -103,6 +103,33 @@ Sliding Window
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
 
+
+################################### PROBLEM 7 ###################################
+
+class Solution:
+    def reverse(self, x: int) -> int:
+        # Define the 32-bit signed integer range
+        INT_MIN, INT_MAX = -2**31, 2**31 - 1
+
+        sign = 1 if x >= 0 else -1
+
+        x = abs(x)
+
+        reversed_x = 0
+        while x != 0:
+            digit = x % 10
+            x //= 10
+
+            if reversed_x > (INT_MAX - digit) // 10:
+                return 0
+
+            reversed_x = 10 * reversed_x + digit
+
+        return sign * reversed_x
+
+
+
+
 ################################### PROBLEM 9 ###################################
 
 
@@ -2119,6 +2146,24 @@ class Solution:                                   # Sort
 
         return sorted_keys[:k]
 
+################################### PROBLEM 349 ###################################
+
+class Solution:
+    def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        seen = set(nums1)
+
+        res = []
+        for num in nums2:
+            if num in seen:
+                res.append(num)
+                seen.remove(num)
+
+        return res
+
+Time: O(n), space: O(n)
+
+
+
 ################################### PROBLEM 370 ###################################
 
 Prefix SUM
@@ -2186,6 +2231,13 @@ class RandomizedSet:
 
     def getRandom(self) -> int:
         return random.choice(self.vals)
+
+################################### PROBLEM 387 ###################################
+
+class Solution:
+    def firstUniqChar(self, s: str) -> int:
+
+
 
 
 ################################### PROBLEM 424 ###################################
