@@ -2236,7 +2236,17 @@ class RandomizedSet:
 
 class Solution:
     def firstUniqChar(self, s: str) -> int:
+        seen = defaultdict(int)     # char --> int
+        # if we use seen = {}, when c is not in seen c, seen[c] would be an error.
 
+        for c in s:
+            seen[c] += 1
+
+        for i, c in enumerate(s):
+            if seen[c] == 1:
+                return i
+
+        return -1
 
 
 
@@ -2954,6 +2964,33 @@ class Solution:
         right = self.dfs(grid, i, j+1)
 
         return up and down and left and right
+
+
+
+################################### PROBLEM 1328 ###################################
+
+class Solution:
+    def breakPalindrome(self, palindrome: str) -> str:
+        if len(palindrome) < 2:
+            return ''
+        letters = list(palindrome)
+        mid = len(palindrome) // 2
+
+        # change the first non-a to a
+        for i in range(mid):
+            if letters[i] != 'a':
+                letters[i] = 'a'
+                return ''.join(letters)
+
+        # no non-a's (all a's maybe except the middle one), so change last a to b
+        letters[-1] = 'b'
+        return ''.join(letters)
+
+
+# break the palindrome into halves, and consider the left half only.
+# Change the first non-a to a in the first half if any.
+# If still running, it means it either all a's or something like aaaXaaa. In this case, change the last letter to b.
+
 
 
 ################################### PROBLEM 1614 ###################################
