@@ -391,6 +391,16 @@ undoing it when we reach a point where it is not valid. In this solution, we kee
 and backtrack if we reach a point where it is not possible to form a valid parentheses string.
 
 
+################################### PROBLEM 31 ###################################
+
+class Solution:
+    def nextPermutation(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+
+
+
 ################################### PROBLEM 33 ###################################
 Search in rototed sorted array (distinct values)
 See problem 81 for the case when there are duplicates
@@ -1465,6 +1475,10 @@ class Solution:                                # change in place, might not favo
         self.dfs(grid, i, j-1)
         self.dfs(grid, i, j+1)
 
+
+# Time: O(MN), space: O(MN)
+
+
 class Solution:                                # use extra space to save visited
     def numIslands(self, grid: List[List[str]]) -> int:
         if not grid or len(grid[0]) == 0:
@@ -1598,6 +1612,28 @@ class Solution:
             right += 1
 
         return min_length if min_length != float('inf') else 0
+
+################################### PROBLEM 215 ###################################
+
+
+# Sort. Time O(nlogn), space O(n)
+# Heap. Time O(Nlogk), space O(k)
+# Quickselect. Time: O(n), worst case could be O(n^2), space O(1)
+
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        heap = []     # by default, python uses min-heap
+
+        for num in nums:
+            if len(heap) < k:
+                heapq.heappush(heap, num)
+            else:
+                if num > heap[0]:
+                    heapq.heappop(heap)
+                    heapq.heappush(heap, num)
+
+        return heap[0]
+
 
 
 ################################### PROBLEM 216 ###################################
