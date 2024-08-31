@@ -1,0 +1,50 @@
+
+# 8.1  Write a query to get the clickthrough rate per app in 2019.
+
+SELECT
+  app_id,
+  SUM(IF(event_id = 'click', 1, 0)) / SUM(IF(event_id = 'impression', 1, 0)) AS ctr
+FROM
+  event
+WHERE
+  timestamp >= '2019-01-01' AND timestamp <= '2020-01-01'
+GROUP BY
+  1
+
+
+# 8.2 Write a query to list the top 3 cities that had the most number of completed orders
+
+WITH trades_users_city AS (
+  SELECT order_id, t.user_id, status
+  FROM trades t
+  JOIN users u
+  ON t.user_id = u.user_id
+  where status = 'complete'
+)
+
+SELECT city, count(order_id) AS total_number
+FROM trades_users_city
+GROUP BY city
+ORDER BY total_number DESC
+LIMIT 3
+
+
+# SOLUTION
+
+SELECT
+  u.city,
+  COUNT(DISTINCT t.order_id) AS num_orders
+FROM
+  trades t
+JOIN
+  users u ON t.user_id = u.user_id
+WHERE
+  t.status = 'complete'
+GROUP BY
+  city
+ORDER BY
+  num_orders DESC
+LIMIT
+  3
+
+#
