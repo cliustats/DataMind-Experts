@@ -47,4 +47,55 @@ ORDER BY
 LIMIT
   3
 
-#
+# 8.3 Write a query to compare the viewership on laptops versus mobile devices
+
+SELECT
+  (CASE WHEN device_type = laptop THEN 'laptops' ELSE 'mobile' END) AS type
+  device_type, SUM(view_time) AS total_view_time
+FROM
+  viewership
+GROUP BY
+  type
+
+# SOLUTION
+
+SELECT
+  SUM(IF(device_type = 'laptop', 1, 0)) AS laptop_views,
+  SUM(IF(device_type IN ('phone', 'tablet'), 1, 0)) AS mobile_views
+FROM
+  viewership
+
+
+# 8.4
+
+SELECT
+  trans_date,
+  product_id,
+  SUM(spend) OVER (
+    PARTITION BY product_id
+    ORDER BY trans_date
+  ) AS cum_spend
+FROM
+  total_trans
+ORDER BY
+  product_id, trans_date ASC
+
+
+# 8.5
+
+SELECT
+  user_id,
+  COUNT(product_id) AS total_number
+FROM
+  user_transactions
+GROUP BY
+  user_id
+HAVING
+  SUM(spend) > 1000
+ORDER BY
+  total_number DESC
+LIMIT
+  10
+
+
+# 8.6
