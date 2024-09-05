@@ -82,7 +82,7 @@ ORDER BY
 
 
 # 8.5
-
+ 
 SELECT
   user_id,
   COUNT(product_id) AS total_number
