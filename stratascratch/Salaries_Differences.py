@@ -11,3 +11,14 @@ market_highest_salary = highest_salary.loc[highest_salary['department'] == 'mark
 engineering_highest_salary = highest_salary.loc[highest_salary['department'] == 'engineering', 'salary'].values
 
 market_highest_salary - engineering_highest_salary
+
+
+
+
+
+
+# another method
+
+df = pd.merge(db_employee, db_dept, left_on='department_id', right_on='id', how='left')
+
+abs(df[df['department'].isin(['marketing', 'engineering'])].groupby('department')['salary'].max().reset_index()['salary'].diff().iloc[1])
