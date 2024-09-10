@@ -17,3 +17,19 @@ sf = sf[['business_name']].drop_duplicates()
 low = sf.business_name.str.lower()
 sf['type'] = np.where(low.str.contains(r'(cafe|café|coffee)'), 'cafe', np.where(low.str.contains(r'(school)'), 'school', np.where(low.str.contains(r'(restaurant)'), 'restaurant', 'other')))
 sf
+
+
+
+
+# How to check duplicates
+
+sf['business_name'].value_counts().reset_index()
+
+
+# Another way of doing this
+sf = sf_restaurant_health_violations
+sf = sf[['business_name']].drop_duplicates()
+sf['business_type'] = sf['business_type'].apply(lambda x: 'school' if 'school' in x.lower() \
+                                                                   else 'restaurant' if 'restaurant' in x.lower() \
+                                                                   else 'cafe' if 'cafe' in x.lower() or 'coffee' in x.lower \
+                                                                   else 'other')
