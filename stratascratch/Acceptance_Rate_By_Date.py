@@ -22,4 +22,4 @@ merged_df = pd.merge(sent_requests, accepted_requests, how='left', on=['user_id_
 accepted_count = merged_df.groupby(["date_sent"]).count().reset_index()
 accepted_count["acceptance_rate"] = accepted_count["action_accepted"]/accepted_count["action_sent"]
 result = accepted_count.rename(columns = {'date_sent': 'date_x'})
-result[['date_x', 'acceptance_rate']]
+result[['date_x', 'acceptance_rate']] 
