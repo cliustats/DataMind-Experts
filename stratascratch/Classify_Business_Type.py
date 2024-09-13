@@ -31,5 +31,5 @@ sf = sf_restaurant_health_violations
 sf = sf[['business_name']].drop_duplicates()
 sf['business_type'] = sf['business_type'].apply(lambda x: 'school' if 'school' in x.lower() \
                                                                    else 'restaurant' if 'restaurant' in x.lower() \
-                                                                   else 'cafe' if 'cafe' in x.lower() or 'coffee' in x.lower \
+                                                                   else 'cafe' if 'cafe' in x.lower() or 'coffee' in x.lower() \
                                                                    else 'other')

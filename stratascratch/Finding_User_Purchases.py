@@ -18,3 +18,12 @@ df = amazon_transactions.sort_values(['user_id','created_at'])
 df['diff'] = df.groupby('user_id')['created_at'].diff().dt.days
 result = df[df['diff'] <= 7]['user_id'].unique()
 result
+
+
+
+
+
+df = amazon_transactions.sort_values(['user_id', 'created_at'])
+
+df['next_purchase_time'] = df.groupby('user_id')['created_at'].diff()
+df[df['next_purchase_time'] <= pd.Timedelta(days=7)]['user_id'].unique()
