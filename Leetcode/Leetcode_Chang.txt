@@ -2285,6 +2285,14 @@ class Solution:
         return -1
 
 
+################################### PROBLEM 394 ###################################
+
+class Solution:
+    def decodeString(self, s: str) -> str:
+        stack = []
+
+
+
 
 ################################### PROBLEM 424 ###################################
 Sliding Window
