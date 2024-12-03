@@ -71,7 +71,6 @@ def find_closest_centroids(X, centroids):
     return idx
 
 
-
 # 1.2 Computing centroid means
 # Given assignments of every point to a centroid, the second phase of the algorithm recomputes, for each centroid, the mean of the points that were assigned to it.
 
@@ -119,7 +118,7 @@ def run_kMeans(X, initial_centroids, max_iters=10):
 
     return centriods, idx
 
- 
+
 # 3. Random initialization
 def kMeans_init_centroids(X, K):
     """
