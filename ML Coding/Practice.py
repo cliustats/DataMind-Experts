@@ -197,4 +197,15 @@ print(df.dtypes)   # Print data types of each column:
 
 
 df["isYouthful"] = df["Age"].apply(lambda age: "Yes" if age < 30 else "No")
-print(df)
+
+
+df2 = pd.DataFrame({"Name": ["Megan"], "Age": [34], "City": ["San Francisco"], "IsYouthful": ["No"]})
+
+df_concatenated = pd.concat([df, df2], ignore_index=True)
+# pd.concat: default is axis=0, meaning rows are concatenated
+
+# Column-Wise Concatenation:
+pd.concat([df, df2], axis=1)
+
+# Handling Overlapping Columns: Use join='inner' to only keep overlapping columns:
+pd.concat([df, df2], join='inner')
