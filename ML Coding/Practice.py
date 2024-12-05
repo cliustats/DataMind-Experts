@@ -201,11 +201,47 @@ df["isYouthful"] = df["Age"].apply(lambda age: "Yes" if age < 30 else "No")
 
 df2 = pd.DataFrame({"Name": ["Megan"], "Age": [34], "City": ["San Francisco"], "IsYouthful": ["No"]})
 
-df_concatenated = pd.concat([df, df2], ignore_index=True)
 # pd.concat: default is axis=0, meaning rows are concatenated
-
+df_concatenated = pd.concat([df, df2], ignore_index=True)
 # Column-Wise Concatenation:
 pd.concat([df, df2], axis=1)
-
 # Handling Overlapping Columns: Use join='inner' to only keep overlapping columns:
 pd.concat([df, df2], join='inner')
+
+
+print(df['column_name']) # select a single column
+print(df[['col1', 'col2']]) # select multiple columns
+
+df.loc (Label-Based Indexing)
+df.iloc (Integer-Based Indexing)
+
+
+################################################################
+                    Descriptive Statistics
+################################################################
+
+import numpy as np
+import pandas as pd
+import seaborn as sns
+
+# Load Titanic dataset
+titanic_df = sns.load_dataset('titanic')
+
+mean_age = titanic_df['age'].mean()
+median_age = titanic_df['age'].median()
+mode_age = titanic_df['age'].mode()[0]
+
+std_dev_age = np.std(titanic_df['age'])
+
+
+# Quartiles and percentiles
+# Using Numpy
+Q1_age_np = np.percentile(titanic_df['age'].dropna(), 25) # dropna is being used to drop NA values
+
+# Using Pandas
+Q1_age_pd = titanic_df['age'].quantile(0.25)
+
+
+################################################################
+            Data Filtering and Sorting with Pandas
+################################################################
