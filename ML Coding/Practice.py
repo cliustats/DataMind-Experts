@@ -233,7 +233,6 @@ mode_age = titanic_df['age'].mode()[0]
 
 std_dev_age = np.std(titanic_df['age'])
 
-
 # Quartiles and percentiles
 # Using Numpy
 Q1_age_np = np.percentile(titanic_df['age'].dropna(), 25) # dropna is being used to drop NA values
@@ -245,3 +244,103 @@ Q1_age_pd = titanic_df['age'].quantile(0.25)
 ################################################################
             Data Filtering and Sorting with Pandas
 ################################################################
+
+# Filter passengers who survived
+survivors = titanic_df[titanic_df['survived'] == 1]
+# Sort survivors by age
+sorted_df = survivors.sort_values('age')
+# Sort survivors by class and age
+sorted_df = survivors.sort_values(['pclass', 'age'], ascending=[False, True])
+# Filter female passengers who survived
+female_survivors = titanic_df[
+    (titanic_df['survived'] == 1) & (titanic_df['sex'] == 'female')
+]
+
+female_survivors = titanic_df.query('survived == 1 & sex == "female"')
+
+
+################################################################
+            Data Visualization
+################################################################
+
+
+# Set display option to show all columns
+pd.set_option('display.max_columns', None)
+# Revert to Default Settings:
+pd.reset_option('display.max_columns')
+# Temporarily Change the Context:
+with pd.option_context('display.max_columns', None):
+    print(titanic_df.head())
+
+# Print the first five entries
+print(titanic_df.head())
+
+# Print the last five entries
+print(titanic_df.tail())
+
+# Print the shape of the DataFrame
+print(titanic_df.shape)
+# Output: (891, 15)
+
+# Print a concise summary of the DataFrame
+titanic_df.info()
+"""
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 891 entries, 0 to 890
+Data columns (total 15 columns):
+ #   Column       Non-Null Count  Dtype
+---  ------       --------------  -----
+ 0   survived     891 non-null    int64
+ 1   pclass       891 non-null    int64
+ 2   sex          891 non-null    object
+ 3   age          714 non-null    float64
+ 4   sibsp        891 non-null    int64
+ 5   parch        891 non-null    int64
+ 6   fare         891 non-null    float64
+ 7   embarked     889 non-null    object
+ 8   class        891 non-null    category
+ 9   who          891 non-null    object
+ 10  adult_male   891 non-null    bool
+ 11  deck         203 non-null    category
+ 12  embark_town  889 non-null    object
+ 13  alive        891 non-null    object
+ 14  alone        891 non-null    bool
+dtypes: bool(2), category(2), float64(2), int64(4), object(5)
+memory usage: 80.7+ KB
+"""
+
+# Print the descriptive statistics of the DataFrame
+print(titanic_df.describe())
+"""
+         survived      pclass         age       sibsp       parch        fare
+count  891.000000  891.000000  714.000000  891.000000  891.000000  891.000000
+mean     0.383838    2.308642   29.699118    0.523008    0.381594   32.204208
+std      0.486592    0.836071   14.526497    1.102743    0.806057   49.693429
+min      0.000000    1.000000    0.420000    0.000000    0.000000    0.000000
+25%      0.000000    2.000000   20.125000    0.000000    0.000000    7.910400
+50%      0.000000    3.000000   28.000000    0.000000    0.000000   14.454200
+75%      1.000000    3.000000   38.000000    1.000000    0.000000   31.000000
+max      1.000000    3.000000   80.000000    8.000000    6.000000  512.329200
+"""
+
+# Key Parameters for describe()
+# Parameter	            Description
+# include='all'	        Includes all columns (numeric and non-numeric).
+# include=[type]	    Specify data types to include (e.g., ['object', 'category']).
+# exclude=[type]	    Exclude specific data types from the output.
+
+# Distribution of categorical data
+print(titanic_df['sex'].value_counts())
+"""
+male      577
+female    314
+Name: sex, dtype: int64
+"""
+
+# Print the count of unique entries in 'embarked' column
+# Returns the number of unique non-null values
+print(titanic_df['embarked'].nunique()) # Output: 3
+
+# Print the unique entries in 'embarked' column
+# Returns an array of all unique values in the column, including NaN (if present).
+print(titanic_df['embarked'].unique()) # Output: ['S' 'C' 'Q' nan]
