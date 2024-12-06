@@ -401,5 +401,10 @@ sns.set(style="whitegrid")
 ################################################################
                          Seaborn
 ################################################################
-# Set the seaborn default aesthetic parameters
-sns.set(style="whitegrid")
+
+# Set plot styling
+sns.set(style="whitegrid", palette="Blues", font="Serif", font_scale=1.2)
+
+# Create a plot
+sns.countplot(x='pclass', data=titanic_df)
+plt.show()
