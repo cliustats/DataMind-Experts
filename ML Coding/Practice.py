@@ -361,7 +361,7 @@ print('Age IQR:', IQR) # Age IQR: 17.875
 
 
 ################################################################
-            Matplotlib
+                         Matplotlib
 ################################################################
 
 
@@ -390,3 +390,16 @@ plt.xlabel("Sex")
 plt.ylabel("Count")
 plt.title("Sex Distribution")
 plt.show()
+
+
+import seaborn as sns
+
+# Set the seaborn default aesthetic parameters
+sns.set(style="whitegrid")
+
+
+################################################################
+                         Seaborn
+################################################################
+# Set the seaborn default aesthetic parameters
+sns.set(style="whitegrid")
