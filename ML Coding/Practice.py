@@ -329,6 +329,9 @@ max      1.000000    3.000000   80.000000    8.000000    6.000000  512.329200
 # include=[type]	    Specify data types to include (e.g., ['object', 'category']).
 # exclude=[type]	    Exclude specific data types from the output.
 
+# Generate descriptive statistics
+titanic_stats = titanic.describe(include='all')
+
 # Distribution of categorical data
 print(titanic_df['sex'].value_counts())
 """
@@ -344,3 +347,29 @@ print(titanic_df['embarked'].nunique()) # Output: 3
 # Print the unique entries in 'embarked' column
 # Returns an array of all unique values in the column, including NaN (if present).
 print(titanic_df['embarked'].unique()) # Output: ['S' 'C' 'Q' nan]
+
+
+# Calculate the numerical data range
+age_range = titanic['age'].max() - titanic['age'].min()
+print('Age Range:', age_range) # Age Range: 79.58
+
+# Calculate the IQR
+Q1 = titanic['age'].quantile(0.25)
+Q3 = titanic['age'].quantile(0.75)
+IQR = Q3 - Q1
+print('Age IQR:', IQR) # Age IQR: 17.875
+
+
+################################################################
+            Matplotlib
+################################################################
+
+
+import matplotlib.pyplot as plt
+
+# Count total males and females
+gender_data = titanic_df['sex'].value_counts()
+
+# Create a bar chart
+gender_data.plot(kind ='bar', title='Sex Distribution')
+plt.show()
