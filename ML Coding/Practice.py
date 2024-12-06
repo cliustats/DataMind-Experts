@@ -371,5 +371,22 @@ import matplotlib.pyplot as plt
 gender_data = titanic_df['sex'].value_counts()
 
 # Create a bar chart
-gender_data.plot(kind ='bar', title='Sex Distribution')
+gender_data.plot(kind='bar', title='Sex Distribution')
+plt.show()
+
+
+# Types of Plots Supported by .plot()
+# The .plot() method supports different kinds of plots by specifying the kind parameter:
+#
+# Plot Type	         kind Parameter	        Use Case
+# Line Plot	         'line' (default)	    Visualizing trends in data.
+# Bar Chart	         'bar'        	        Comparing categorical data (e.g., gender distribution).
+# Horizontal Bar	 'barh'	                Similar to bar chart but horizontally oriented.
+# Pie Chart	         'pie'	                Showing proportions of categories.
+# Histogram	         'hist'	                Visualizing distributions of numeric data.
+
+gender_data.plot(kind='bar', color='skyblue', alpha=0.7, grid=True)
+plt.xlabel("Sex")
+plt.ylabel("Count")
+plt.title("Sex Distribution")
 plt.show()
