@@ -436,3 +436,28 @@ plt.title('Age Distribution Among Titanic Passengers')
 plt.xlabel('Age')
 plt.ylabel('Number of Passengers')
 plt.show()
+
+# A histogram using 'hue', 'multiple', and 'palette'
+sns.histplot(data=titanic_df, x='age', hue="sex", multiple="stack", palette="pastel")
+
+# A histogram using 'binwidth' and 'element'
+sns.histplot(data=titanic_df, x="age", binwidth=1, element="step", color="purple")
+
+
+################################################################
+                         Barplot
+################################################################
+
+# Color-coded bar plot representing 'sex' and survival ('survived')
+sns.countplot(x='sex', hue='survived', data=titanic_df, color="cyan",
+              order=["female", "male"], orient='v').set_title('Sex and Survival Rates')
+# hue - This parameter allows you to represent an additional categorical variable by colors. It becomes very handy in analyzing how the distribution of categories changes with respect to other categorical variables.
+# color - This parameter lets you set a specific color for all the plot bars.
+# order and hue_order - These parameters can be useful in arranging the bars in a specific order. You can provide an ordered list of categories to these parameters to adjust the ordering of bars.
+# orient - This parameter can be used to change the plot's orientation. By default, it's set to 'v' for vertical plots. You can change it to 'h' for horizontal plots.
+
+
+
+################################################################
+              Scatter Plots and Correlation of Variables
+################################################################
