@@ -397,7 +397,6 @@ import seaborn as sns
 # Set the seaborn default aesthetic parameters
 sns.set(style="whitegrid")
 
-
 ################################################################
                          Seaborn
 ################################################################
@@ -407,4 +406,12 @@ sns.set(style="whitegrid", palette="Blues", font="Serif", font_scale=1.2)
 
 # Create a plot
 sns.countplot(x='pclass', data=titanic_df)
+plt.show()
+
+plt.figure(figsize=(12, 6))
+sns.countplot(x='pclass', data=titanic_df, palette='coolwarm')
+plt.title('Passenger Class Count')
+plt.xlabel('Passenger Class')
+plt.ylabel('Count')
+plt.legend(title='Passenger Class')
 plt.show()
