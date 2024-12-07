@@ -426,4 +426,13 @@ import seaborn as sns
 
 titanic_df = sns.load_dataset('titanic')
 
-sns.histplot(data=titanic_df, x='age', kde=True)
+# Increase the number of bins to 30 (default is 10)
+sns.histplot(data=titanic_df, x='age', bins=30, kde=True)
+
+# Give your plot a comprehensive title
+plt.title('Age Distribution Among Titanic Passengers')
+
+# Label your axes
+plt.xlabel('Age')
+plt.ylabel('Number of Passengers')
+plt.show()
