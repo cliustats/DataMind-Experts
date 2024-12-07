@@ -414,4 +414,16 @@ plt.title('Passenger Class Count')
 plt.xlabel('Passenger Class')
 plt.ylabel('Count')
 plt.legend(title='Passenger Class')
+plt.xticks(rotation=45)
 plt.show()
+
+
+################################################################
+                         Histogram
+################################################################
+
+import seaborn as sns
+
+titanic_df = sns.load_dataset('titanic')
+
+sns.histplot(data=titanic_df, x='age', kde=True)
