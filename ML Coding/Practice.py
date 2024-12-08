@@ -500,7 +500,18 @@ plt.show()
 correlation_matrix = titanic_df.corr(numeric_only=True)
 
 # Create a heatmap
-sns.heatmap(correlation_matrix, annot=True)
-
+sns.heatmap(correlation_matrix, annot=True, cbar=True, vmin=-1, vmax=1)
 # Show plot
 plt.show()
+
+
+# Building a color map
+color_map = sns.diverging_palette(220, 20, as_cmap=True)
+sns.heatmap(correlation_matrix, annot=True, cmap=color_map)
+
+plt.show()
+
+
+################################################################
+              Missing Data
+################################################################
