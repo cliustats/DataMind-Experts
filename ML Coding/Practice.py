@@ -515,3 +515,91 @@ plt.show()
 ################################################################
               Missing Data
 ################################################################
+
+# Detect missing values
+missing_values = titanic_df.isnull()
+print(missing_values.head(10))
+"""
+   survived  pclass    sex    age  ...   deck  embark_town  alive  alone
+0     False   False  False  False  ...   True        False  False  False
+1     False   False  False  False  ...  False        False  False  False
+2     False   False  False  False  ...   True        False  False  False
+3     False   False  False  False  ...  False        False  False  False
+4     False   False  False  False  ...   True        False  False  False
+5     False   False  False   True  ...   True        False  False  False
+6     False   False  False  False  ...  False        False  False  False
+7     False   False  False  False  ...   True        False  False  False
+8     False   False  False  False  ...   True        False  False  False
+9     False   False  False  False  ...   True        False  False  False
+
+[10 rows x 15 columns]
+"""
+
+missing_values_count = titanic_df.isnull().sum()
+print(missing_values_count)
+"""
+survived         0
+pclass           0
+sex              0
+age            177
+sibsp            0
+parch            0
+fare             0
+embarked         2
+class            0
+who              0
+adult_male       0
+deck           688
+embark_town      2
+alive            0
+alone            0
+dtype: int64
+"""
+
+-----  Dropping  -----------
+# Copy the original dataset
+titanic_df_copy = titanic_df.copy()
+
+# Drop rows with missing values
+titanic_df_copy.dropna(inplace=True)
+
+# Check the dataframe
+print(titanic_df_copy.isnull().sum())
+# There will be no missing values in every column
+
+# Detected missing values visualized
+plt.figure(figsize=(10,6))
+sns.heatmap(titanic_df.isnull(), cmap='viridis')
+plt.show()
+
+-----  Imputation  -----------
+# Impute missing values using mean
+titanic_df['age'].fillna(titanic_df['age'].mean(), inplace=True)
+
+# Check the dataframe
+print(titanic_df.isnull().sum())
+"""
+survived         0
+pclass           0
+sex              0
+age              0
+sibsp            0
+parch            0
+fare             0
+embarked         2
+class            0
+who              0
+adult_male       0
+deck           688
+embark_town      2
+alive            0
+alone            0
+dtype: int64
+"""
+
+# Impute missing values using backward fill
+titanic_df['age'].fillna(method='bfill', inplace=True)
+
+# Check the dataframe
+print(titanic_df.isnull().sum())
+# The output is the same as in the previous example
