@@ -461,3 +461,46 @@ sns.countplot(x='sex', hue='survived', data=titanic_df, color="cyan",
 ################################################################
               Scatter Plots and Correlation of Variables
 ################################################################
+
+sns.scatterplot(x='age', y='fare', hue='pclass', style='sex', size='fare', sizes=(20, 200), data=titanic)
+plt.title("Age vs Fare (Separate markers for Sex and Sizes for Fare)")
+plt.show()
+
+# style: This attribute will make different marks on the plot for different categories.
+# size: This attribute can determine the size of a plotting mark using an additional variable. This represents another layer of information, providing you with a 3-dimensional plot.
+
+# Correlation of all numeric variables in the Titanic dataset
+corr_vals = titanic.corr(numeric_only=True)
+print(corr_vals)
+
+
+################################################################
+                            Box Plots
+################################################################
+
+
+sns.boxplot(
+    x='pclass', y='fare',
+    hue='survived',
+    data=titanic_df,
+    palette='Set3', linewidth=1.5,
+    order=[3,1,2], hue_order=[1,0],
+    color='skyblue', saturation=0.7,
+    dodge=True, fliersize=5
+)
+plt.title('Fares vs Passenger Classes Differentiated by Survival')
+plt.show()
+
+
+################################################################
+               Heatmaps for Correlation Analysis
+################################################################
+
+# Calculate correlation matrix
+correlation_matrix = titanic_df.corr(numeric_only=True)
+
+# Create a heatmap
+sns.heatmap(correlation_matrix, annot=True)
+
+# Show plot
+plt.show()
