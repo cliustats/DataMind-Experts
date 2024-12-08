@@ -574,10 +574,21 @@ plt.show()
 
 -----  Imputation  -----------
 # Impute missing values using mean
+ --- NOT RECOMMENDED  ---
 titanic_df['age'].fillna(titanic_df['age'].mean(), inplace=True)
 
+-----   USE THIS  ------
+titanic_df['age'] = titanic_df['age'].fillna(titanic_df['age'].mean())
+
+# Use a Dictionary with fillna (For Multiple Columns): If you're working with
+# multiple columns, you can use the dictionary-based approach mentioned in the warning:
+titanic_df.fillna({'age': titanic_df['age'].mean()}, inplace=True)
+
+titanic_df['age'] = titanic_df['age'].apply(lambda x: titanic_df['age'].mean() if pd.isna(x) else x)
+
+
 # Check the dataframe
-print(titanic_df.isnull().sum())
+print(titanic_df.isna().sum())
 """
 survived         0
 pclass           0
@@ -598,8 +609,27 @@ dtype: int64
 """
 
 # Impute missing values using backward fill
+--- NOT RECOMMENDED ---
 titanic_df['age'].fillna(method='bfill', inplace=True)
+-----   USE THIS  ------
+titanic_df['age'] = titanic_df['age'].bfill()
 
 # Check the dataframe
 print(titanic_df.isnull().sum())
 # The output is the same as in the previous example
+
+
+################################################################
+              Copy
+################################################################
+
+import copy
+shallow_copy = copy.copy(original_df)
+
+
+import copy
+deep_copy = copy.deepcopy(original_df)
+
+################################################################
+             Encoding and Transforming Categorical Data
+################################################################
