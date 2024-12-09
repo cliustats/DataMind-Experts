@@ -684,3 +684,73 @@ ohe = OneHotEncoder(sparse=False, drop='first')
 encoded_array = ohe.fit_transform(titanic_df['embark_town'])
 encoded_df = pd.DataFrame(encoded_array, columns=ohe.get_feature_names_out(['embark_town']))
 titanic_df = pd.concat([titanic_df, encoded_df], axis=1)
+
+################################################################
+            Data Transformation and Scaling Techniques
+################################################################
+import numpy as np
+import seaborn as sns
+from sklearn.preprocessing import StandardScaler
+
+# Load the dataset and drop rows with missing values
+titanic_df = sns.load_dataset('titanic').dropna()
+
+ -- best practice ---
+titanic_df = sns.load_dataset('titanic').dropna(subset=['age', 'embarked'])
+
+# Initialize the StandardScaler
+std_scaler = StandardScaler()
+
+# Fit and transform the 'age' column
+titanic_df['age'] = std_scaler.fit_transform(np.array(titanic_df['age']).reshape(-1, 1))
+
+# Check the transformed 'age' column
+print(titanic_df['age'].head())
+"""
+1     0.152082
+3    -0.039875
+6     1.175852
+10   -2.023430
+11    1.431795
+Name: age, dtype: float64
+"""
+
+from sklearn.preprocessing import MinMaxScaler
+
+# Initialize the MinMaxScaler
+min_max_scaler = MinMaxScaler()
+# Create a MinMaxScaler with feature range (-1, 1)
+min_max_scaler = MinMaxScaler(feature_range=(-1, 1))
+
+
+# Fit and transform the 'fare' column
+titanic_df['fare'] = min_max_scaler.fit_transform(np.array(titanic_df['fare']).reshape(-1, 1))
+
+---------------------------------------------
+# Import the necessary libraries
+import numpy as np
+import seaborn as sns
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
+
+# Load the Titanic dataset
+titanic_df = sns.load_dataset('titanic').dropna()
+
+# Initialize the scalers
+std_scaler = StandardScaler()
+min_max_scaler = MinMaxScaler()
+robust_scaler = RobustScaler()
+
+# Scale the 'age' column of the dataset using Standard Scaler
+titanic_df['age_std'] = std_scaler.fit_transform(np.array(titanic_df['age']).reshape(-1, 1))
+
+# Scale the 'fare' column of the dataset using the Min-Max Scaler
+titanic_df['fare_minmax'] = min_max_scaler.fit_transform(np.array(titanic_df['fare']).reshape(-1, 1))
+
+# Scale the 'fare' column of the dataset using Robust Scaler
+titanic_df['fare_robust'] = robust_scaler.fit_transform(np.array(titanic_df['fare']).reshape(-1, 1))
+
+# Print the first 5 rows of the modified dataset
+print(titanic_df.head())
+
+# Drop the original 'fare' column
+titanic_df.drop(columns=['fare'], inplace=True)
