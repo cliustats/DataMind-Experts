@@ -626,8 +626,6 @@ print(titanic_df.isnull().sum())
 import copy
 shallow_copy = copy.copy(original_df)
 
-
-import copy
 deep_copy = copy.deepcopy(original_df)
 
 ################################################################
@@ -774,3 +772,122 @@ print(outliers_zscore)
 
 [2 rows x 16 columns]
 """
+
+--- The IQR Method ---
+# Calculate IQR
+Q1 = titanic_df['age'].quantile(0.25)
+Q3 = titanic_df['age'].quantile(0.75)
+IQR = Q3 - Q1
+
+# Define Bounds
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+# Get rows of outliers according to IQR method
+outliers_iqr = titanic_df[(titanic_df['age'] < lower_bound) | (titanic_df['age'] > upper_bound)]
+print(outliers_iqr)
+"""
+     survived  pclass   sex   age  ...  embark_town  alive  alone age_zscore
+33          0       2  male  66.0  ...  Southampton     no   True   2.498943
+54          0       1  male  65.0  ...    Cherbourg     no  False   2.430103
+96          0       1  male  71.0  ...    Cherbourg     no   True   2.843141
+116         0       3  male  70.5  ...   Queenstown     no   True   2.808721
+280         0       3  male  65.0  ...   Queenstown     no   True   2.430103
+456         0       1  male  65.0  ...  Southampton     no   True   2.430103
+493         0       1  male  71.0  ...    Cherbourg     no   True   2.843141
+630         1       1  male  80.0  ...  Southampton    yes   True   3.462699
+672         0       2  male  70.0  ...  Southampton     no   True   2.774301
+745         0       1  male  70.0  ...  Southampton     no  False   2.774301
+851         0       3  male  74.0  ...  Southampton     no   True   3.049660
+
+[11 rows x 16 columns]
+"""
+--- Dropping them ---
+# Using the Z-score method
+titanic_df = titanic_df[titanic_df['age_zscore'] <= 3]
+
+# Using the IQR method
+titanic_df = titanic_df[(titanic_df['age'] >= lower_bound) & (titanic_df['age'] <= upper_bound)]
+
+--- Replacing them with another value (mean, median, mode, etc.) ---
+# using mean
+titanic_df.loc[titanic_df['age_zscore'] > 3, 'age'] = titanic_df['age'].mean()
+
+# using median
+titanic_df.loc[(titanic_df['age'] < lower_bound) | (titanic_df['age'] > upper_bound), 'age'] = titanic_df['age'].median()
+
+# DataFrame.loc[row_indexer, column_indexer]
+# row_indexer: Filters rows based on labels, conditions, or slices.
+# column_indexer: Specifies the columns to select or modify.
+
+
+################################################################
+            Correlated Features
+################################################################
+
+# Calculate the correlation matrix
+corr_matrix = titanic_df.corr(numeric_only=True)
+
+# Let's visualize this correlation matrix using a heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(corr_matrix, annot=True, fmt=".2f", cmap='coolwarm', cbar=True)
+
+# Add a title
+plt.title('Heatmap of the Correlation Matrix')
+
+# Show the plot
+plt.show()
+
+# Now, let's remove a redundant feature
+# Choose age and parch, as they are highly correlated
+clean_df = titanic_df.drop('age', axis=1)
+
+# Print the first 5 rows of the cleaned dataframe
+print(clean_df.head())
+
+################################################################
+            Feature Engineering
+################################################################
+
+# Create a new feature, 'family_size'
+titanic_df['family_size'] = titanic_df['sibsp'] + titanic_df['parch'] + 1
+
+# Define the bin edges
+age_bins = [0, 12, 18, 30, 45, 100]
+
+# Define the bin labels
+age_labels = ['Child', 'Teenager', 'Young Adult', 'Middle Age', 'Senior']
+
+# Create the age group feature
+titanic_df['age_group'] = pd.cut(titanic_df['age'], bins=age_bins, labels=age_labels)
+
+# Show the first few rows of the data
+print(titanic_df.head())
+"""
+   survived  pclass     sex   age  ...  alive  alone  family_size    age_group
+0         0       3    male  22.0  ...     no  False            2  Young Adult
+1         1       1  female  38.0  ...    yes  False            2   Middle Age
+2         1       3  female  26.0  ...    yes   True            1  Young Adult
+3         1       1  female  35.0  ...    yes  False            2   Middle Age
+4         0       3    male  35.0  ...     no   True            1   Middle Age
+
+[5 rows x 17 columns]
+"""
+------
+# pd.cut() doesn't handle missing values
+# By default, pd.cut() includes the left edge and excludes the right edge ([left, right)). To change this behavior, use the right=False parameter:
+
+titanic["fare_per_age"] = titanic["fare"] / titanic["age"]
+titanic["fare_per_age"] = titanic["fare_per_age"].replace([np.nan, np.inf, -np.inf], 0)
+
+################################################################
+            Matrix Operations in Numpy
+################################################################
+
+F = np.linalg.inv(E)  # Finding the inverse of matrix E
+FP = np.linalg.pinv(A)  # Finding the pseudo-inverse matrix of A
+
+# np.linalg.inv(a) can only be used for square matrices that are invertible,
+# while np.linalg.pinv(a) can be used for any matrix.
+# If the original matrix is singular or non-square, np.linalg.inv(a) will result in an error,
+#  whereas np.linalg.pinv(a) will still return a result.
