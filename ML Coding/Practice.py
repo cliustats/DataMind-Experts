@@ -633,3 +633,54 @@ deep_copy = copy.deepcopy(original_df)
 ################################################################
              Encoding and Transforming Categorical Data
 ################################################################
+-----  Label Encoding ----
+
+--- NOT RECOMMENDED ---
+# Label Encoding for 'sex'
+titanic_df['sex_encoded'] = pd.factorize(titanic_df['sex'])[0]
+print(titanic_df[['sex', 'sex_encoded']].head())
+"""
+      sex  sex_encoded
+0    male            0
+1  female            1
+2  female            1
+3  female            1
+4    male            0
+"""
+
+--- best practices ---
+
+from sklearn.preprocessing import LabelEncoder
+
+le = LabelEncoder()
+titanic_df['sex_encoded'] = le.fit_transform(titanic_df['sex'])
+
+
+# pd.factorize ensures every unique value is encoded as a number, even if NaN exists (which becomes -1).
+# LabelEncoder does not handle NaN directly (raises an error).
+
+# One-Hot Encoding for 'embark_town'
+encoded_df = pd.get_dummies(titanic_df['embark_town'], prefix='town')
+titanic_df = pd.concat([titanic_df, encoded_df], axis=1)
+print(titanic_df.head())
+"""
+   survived  pclass     sex  ...  town_Cherbourg  town_Queenstown  town_Southampton
+0         0       3    male  ...           False            False              True
+1         1       1  female  ...            True            False             False
+2         1       3  female  ...           False            False              True
+3         1       1  female  ...           False            False              True
+4         0       3    male  ...           False            False              True
+"""
+
+--- best practices ---
+# To avoid multicollinearity issues in regression models, drop one of the dummy columns.
+encoded_df = pd.get_dummies(titanic_df['embark_town'], prefix='town', drop_first=True)
+titanic_df = pd.concat([titanic_df, encoded_df], axis=1)
+
+# Scikit-learn’s OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder
+
+ohe = OneHotEncoder(sparse=False, drop='first')
+encoded_array = ohe.fit_transform(titanic_df['embark_town'])
+encoded_df = pd.DataFrame(encoded_array, columns=ohe.get_feature_names_out(['embark_town']))
+titanic_df = pd.concat([titanic_df, encoded_df], axis=1)
