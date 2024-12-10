@@ -891,3 +891,167 @@ FP = np.linalg.pinv(A)  # Finding the pseudo-inverse matrix of A
 # while np.linalg.pinv(a) can be used for any matrix.
 # If the original matrix is singular or non-square, np.linalg.inv(a) will result in an error,
 #  whereas np.linalg.pinv(a) will still return a result.
+
+G = np.transpose(A)
+
+# Assuming these are two features from our dataset
+feature_1 = np.array([[123], [456], [789]])
+feature_2 = np.array([[321], [654], [987]])
+
+# Combine the two features into one matrix
+data_features = np.hstack((feature_1, feature_2))
+print(data_features)
+"""
+[[123 321]
+ [456 654]
+ [789 987]]
+"""
+
+# np.hstack():
+#
+# Stacks arrays horizontally (column-wise).
+# Requires that the arrays have the same number of rows.
+
+normalized_data_features = data_features / np.linalg.norm(data_features)
+
+row_norms = np.linalg.norm(data_features, axis=1, keepdims=True)
+row_normalized = data_features / row_norms
+
+normalized_data_features_minmax = (data_features - np.min(data_features)) / (np.max(data_features) - np.min(data_features))
+
+----------------
+axis=0: Operates down the rows (column-wise).
+axis=1: Operates across the columns (row-wise).
+
+
+Operation	            Axis	   Effect
+df.sum(axis=0)       	axis=0	   Column-wise sum (sums all rows for each column).
+df.sum(axis=1)	        axis=1	   Row-wise sum (sums all columns for each row).
+df.drop(axis=0)	        axis=0	   Drops rows.
+df.drop(axis=1)	        axis=1	   Drops columns.
+df.apply(func, axis=0)	axis=0	   Applies func to each column.
+df.apply(func, axis=1)	axis=1	   Applies func to each row.
+np.sum(array, axis=0)	axis=0	   Sum along rows (column-wise operation).
+np.sum(array, axis=1)	axis=1	   Sum along columns (row-wise operation).
+
+
+################################################################
+             Advanced Functions in Pandas
+################################################################
+
+# Create a simple dataframe
+data = {'Company': ['GOOG', 'GOOG', 'MSFT', 'MSFT', 'FB', 'FB'],
+       'Person': ['Sam', 'Charlie', 'Amy', 'Vanessa', 'Carl', 'Sarah'],
+       'Sales': [200, 120, 340, 124, 243, 350]}
+df = pd.DataFrame(data)
+
+# for key in df_grouped.groups:
+#     print(f"Group Key: {key}")
+
+# Apply groupby
+df_grouped = df.groupby('Company')
+for key, item in df_grouped:
+    print("\nGroup Key: {}".format(key))
+    print(df_grouped.get_group(key), "\n")
+"""
+Group Key: FB
+  Company Person  Sales
+4      FB   Carl    243
+5      FB  Sarah    350
+
+
+Group Key: GOOG
+  Company   Person  Sales
+0    GOOG      Sam    200
+1    GOOG  Charlie    120
+
+
+Group Key: MSFT
+  Company   Person  Sales
+2    MSFT      Amy    340
+3    MSFT  Vanessa    124
+"""
+
+grouped = df.groupby('Company')
+print(grouped.sum())
+"""
+             Person  Sales
+Company
+FB        CarlSarah    593
+GOOG     SamCharlie    320
+MSFT     AmyVanessa    464
+"""
+
+# Create a dataframe
+df = pd.DataFrame({'A': ['foo', 'bar', 'foo', 'bar','foo', 'bar', 'foo', 'foo'],
+                   'B': ['one', 'one', 'two', 'three','two', 'two', 'one', 'three'],
+                   'C': np.random.randn(8),
+                   'D': np.random.randn(8)})
+
+# Define a function
+def get_sum(row):
+    return row.sum()
+
+# Apply the function
+df['sum'] = df[['C', 'D']].apply(get_sum, axis=1)
+
+print(df)
+"""
+     A      B         C         D       sum
+0  foo    one -0.343200  0.184665 -0.158535
+1  bar    one  0.058870  1.835614  1.894484
+2  foo    two  0.801743 -0.184409  0.617333
+3  bar  three  0.935406  0.124109  1.059515
+4  foo    two  0.782074  0.583470  1.365544
+5  bar    two  0.138934  0.710407  0.849341
+6  foo    one  0.364633  1.147963  1.512596
+7  foo  three -1.364677  1.719538  0.354861
+"""
+----------------------------------------------------
+from sklearn.datasets import fetch_california_housing
+import pandas as pd
+
+# Fetch the dataset
+data = fetch_california_housing(as_frame=True)
+
+# create a DataFrame
+housing_df = pd.DataFrame(data=data.data, columns=data.feature_names)
+
+# Define income category
+housing_df['income_cat'] = pd.cut(housing_df['MedInc'],
+                               bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
+                               labels=[1, 2, 3, 4, 5])
+
+# Group by income category and calculate the average population
+average_population = housing_df.groupby('income_cat').apply(lambda x: x['Population'].mean())
+
+print(average_population)
+"""
+income_cat
+1    1105.806569
+2    1418.232336
+3    1448.062465
+4    1488.974718
+5    1389.890347
+dtype: float64
+"""
+
+################################################################
+             Optimization
+################################################################
+
+# The first technique is choosing the pd.Categorical data type (or use .astype('category')) specifically for categorical data (data that takes on a limited, usually fixed, number of possible values), which can yield significant savings in memory.
+
+df['Type'] = pd.Categorical(df['Type'])
+df['MedInc'] = df['MedInc'].astype('category')
+
+# Downcast data type for 'AveBedrms' column
+df['AveBedrms'] = pd.to_numeric(df['AveBedrms'], downcast='float')
+df['Population'] = df['Population'].astype('int32')
+
+# Regular way
+df_copy = df[df['Population'] > 1000]
+df_copy.dropna(inplace=True)
+
+# Optimized way
+df[df['Population'] > 1000].dropna(inplace=True)
