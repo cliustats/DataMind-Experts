@@ -1055,3 +1055,78 @@ df_copy.dropna(inplace=True)
 
 # Optimized way
 df[df['Population'] > 1000].dropna(inplace=True)
+
+------------------ Change Data Type ------
+
+# Load the California Housing dataset
+california = datasets.fetch_california_housing()
+df = pd.DataFrame(data=np.c_[california['data'], california['target']], columns=california['feature_names'] + ['target'])
+
+def memory_usage_pandas(df):
+    bytes = df.memory_usage(deep=True).sum()
+    return bytes / 1024**2  # Convert bytes to megabytes
+
+original_memory = memory_usage_pandas(df)
+
+# Optimize memory usage in Pandas using categorical data types
+# California Housing dataset does not have any Categorical features, so we will use downcasting
+df['AveBedrms'] = pd.to_numeric(df['AveBedrms'], downcast='float')
+df['AveRooms'] = pd.to_numeric(df['AveRooms'], downcast='float')
+optimized_memory = memory_usage_pandas(df)
+
+print(f'Original memory usage: {original_memory} MB')
+print(f'Optimized memory usage: {optimized_memory} MB')
+print(f'Memory saved: {original_memory - optimized_memory} MB')
+
+percentage_saved = (start_mem - end_memory) / start_mem * 100
+print(f"The percentage of the memory saved is {percentage_saved:.2f}%")
+
+----------------------------------
+import numpy as np
+import pandas as pd
+from sklearn import datasets
+import time
+
+# Load the California Housing Dataset
+california = datasets.fetch_california_housing()
+df = pd.DataFrame(
+    data=np.c_[california['data'], california['target']],
+    columns=california['feature_names'] + ['target']
+)
+print("Initial DataFrame:")
+print(df.head())
+
+# Function to calculate memory usage
+def get_memory_usage(df):
+    bytes = df.memory_usage(deep=True).sum()
+    mb = bytes / 1024**2  # Convert bytes to megabytes
+    return mb
+
+# Grab initial memory usage
+original_memory = get_memory_usage(df)
+
+# Optimize the 'MedInc' feature
+start_time = time.time()
+
+# Log transformation on 'MedInc'
+df['MedInc'] = df['MedInc'].apply(lambda x: np.log(x))
+
+# Cut 'MedInc' into 5 bins and label them 0-4
+df['MedInc'] = pd.cut(df['MedInc'], bins=5, labels=[0, 1, 2, 3, 4])
+
+# Convert 'MedInc' to categorical type
+df['MedInc'] = df['MedInc'].astype('category')
+
+end_time = time.time()
+
+# Compute the memory usage after tuning
+optimized_memory = get_memory_usage(df)
+
+# Compute the memory reduction percentage
+percentage_saved = (original_memory - optimized_memory) / original_memory * 100
+
+# Print the results
+print(f"Original memory usage: {original_memory:.2f} MB")
+print(f"Optimized memory usage: {optimized_memory:.2f} MB")
+print(f"Memory saved: {percentage_saved:.2f}%")
+print(f"Time taken for optimization: {end_time - start_time:.4f} seconds")
