@@ -1130,3 +1130,20 @@ print(f"Original memory usage: {original_memory:.2f} MB")
 print(f"Optimized memory usage: {optimized_memory:.2f} MB")
 print(f"Memory saved: {percentage_saved:.2f}%")
 print(f"Time taken for optimization: {end_time - start_time:.4f} seconds")
+
+-------------------------------------
+data = {
+    "Gene": ["Gene A", "Gene B", "Gene C", "Gene D"],
+    "Sequence": ["ATCGTACGA", "CGATCGATG", "TAGCTAG", "CGTAGCTA"]
+}
+
+df_gene = pd.DataFrame(data)
+
+df_gene['Length'] = df_gene['Sequence'].apply(len)
+df_gene['A_Count'] = df_gene['Sequence'].apply(x: x.count('A'))
+df_gene['Reversed'] = df_gene['Sequence'].apply(x: x[::-1])
+df_gene['RNA'] = df_gene['Sequence'].apply(lambda x: x.replace('T', 'U'))  # replace T with U
+# To compute the complementary sequence (replace bases with their complements: A ↔ T, C ↔ G):
+complement_map = str.maketrans({"A": "T", "T": "A", "C": "G", "G": "C"})
+df_genes["Complement"] = df_genes["Sequence"].apply(lambda x: x.translate(complement_map))
+print(df_genes)
