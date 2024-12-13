@@ -1,5 +1,5 @@
 ################################################################
-                        Default Parameter Settings
+#                        Default Parameter Settings
 ################################################################
 class Player:
     def __init__(self, name, items=[])
@@ -17,17 +17,26 @@ p2.items.append('sword')
 print(p1.items)
 # Returns ['armor', 'sword']
 
+# The code as written contains a mistake: the default argument for items is a mutable object ([]).
+# This can lead to unexpected behavior because mutable default arguments are shared across all instances
+#  of the class that don't explicitly pass a value for that argument.
+
 
 ----- Correct way -------
 class Player:
     def __init__(self, name, items=None)
             self.name = name
-            if items is None:
-                self.items = []
-            else:
-                self.items = items
+            self.items = items if items is not None else []
+
+            # if items is None:
+            #     self.items = []
+            # else:
+            #     self.items = items
             # print(id(self.items))
 
+################################################################
+#                        is None
+################################################################
 '''
 Tip 2: When dealing with None, the best practice is to use the is operator for comparisons with None
 '''
@@ -40,3 +49,12 @@ if a == None:
   print('None')
 # This works because None is equal to itself.
 # Drawback: It’s less idiomatic and might be prone to issues if custom objects override the == operator in a way that makes them equal to None.
+if a is None:
+  print('None')
+# This is the best approach for checking if a variable is None.
+# The is operator checks identity—whether a is the same object as None.
+# Why it's better: It’s explicit, Pythonic, and doesn’t rely on potentially overridden equality methods.
+
+################################################################
+#                        Decorator
+################################################################
