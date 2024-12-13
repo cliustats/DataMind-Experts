@@ -92,7 +92,7 @@ def detect_outlier_iqr(df):
         Q1 = df[column].quantile(0.25)
         Q3 = df[column].quantile(0.75)
         IQR = Q3 - Q1
-        lower_bound = Q1 - 1.5 * IQR 
+        lower_bound = Q1 - 1.5 * IQR
         upper_bound = Q3 + 1.5 * IQR
         outliers = df[(df[column] < lower_bound) | (df[column] > upper_bound)]
         outlier_count[column] = outliers.shape[0]
@@ -101,6 +101,33 @@ def detect_outlier_iqr(df):
 
 outliers_iqr = detect_outlier_iqr(df)
 outlier_df = pd.DataFrame(
-    list(outliers_iqr.item()), columns=['Column', 'Number of Outliers']
+    list(outliers_iqr.items()), columns=['Column', 'Number of Outliers']
 )
 outlier_df
+
+class_balance = df['churn'].value_counts(normalize=True) * 100
+print("Class Balance in dataframe (as percentile):")
+print(class_balance)
+
+plt.figure(figsize=(6,4))
+sns.countplot(x='churn', data=df, palette='viridis')
+plt.title('Class Distribution of Churn')
+plt.xlabel('Churn')
+plt.ylabel('Count')
+plt.show()
+
+
+df['area code'] = df['area code'].astype('object')
+
+df['phone number'].str.replace('-', '').str.len().value_counts()
+
+df = df.drop('phone number', axis=1)
+
+numeric_features = df.select_dtypes(include=['float64', 'int64']).columns
+
+pearson_correlation_matrix = df[numeric_features].corr(method='pearson')
+
+plt.figure(figsize=(10, 6))
+sns.headmap(pearson_correlation_matrix, annot=True, fmt='.2f', cmap='Dark2')
+plt.title('Pearson Correlation')
+plt.show()
