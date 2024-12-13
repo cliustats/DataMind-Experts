@@ -58,3 +58,49 @@ if a is None:
 ################################################################
 #                        Decorator
 ################################################################
+
+
+
+
+
+
+
+
+
+####  Missing values
+df.isna().sum()
+
+# mean imputation, frequency imputation, target imputation
+mode_city = df['City'].mode()[0]
+df['City'] = df['City'].fillna(mode_city)
+
+# Impute missing values in 'Feature' based on the mean grouped by 'Target'
+df['Feature'] = df.groupby('Target')['Feature'].apply(
+    lambda x: x.fillna(x.mean())
+)
+
+df.duplicated().sum()
+
+df.describe(numeric_only=True)
+df.describe(include='object')
+df.describe(include='all')
+
+# Outlier Detection
+def detect_outlier_iqr(df):
+    outlier_count = {}
+    for column in df.select_dtypes(include='number'):
+        Q1 = df[column].quantile(0.25)
+        Q3 = df[column].quantile(0.75)
+        IQR = Q3 - Q1
+        lower_bound = Q1 - 1.5 * IQR 
+        upper_bound = Q3 + 1.5 * IQR
+        outliers = df[(df[column] < lower_bound) | (df[column] > upper_bound)]
+        outlier_count[column] = outliers.shape[0]
+
+    return outlier_count
+
+outliers_iqr = detect_outlier_iqr(df)
+outlier_df = pd.DataFrame(
+    list(outliers_iqr.item()), columns=['Column', 'Number of Outliers']
+)
+outlier_df
