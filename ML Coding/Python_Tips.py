@@ -131,3 +131,199 @@ plt.figure(figsize=(10, 6))
 sns.headmap(pearson_correlation_matrix, annot=True, fmt='.2f', cmap='Dark2')
 plt.title('Pearson Correlation')
 plt.show()
+
+
+from sklearn.model_selection import train_test_split
+
+
+X = df.drop(columns=['churn'])
+y = df['churn']
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42, stratify=y
+)
+
+print(f"The shape of the training set is {X_train.shape}")
+
+df.select_dtypes(include=['category', 'object']).columns
+
+# Encoding by direct mapping
+y_train = y_train.map({True: 1, Flase: 0})
+
+# Frquncy encoding
+grouped_data = pd.concat([X_train['area code'], y_train], axis=1).groupby('area code').agg(
+    churn_rate=('churn', 'mean'),
+    total_customers=('churn', 'count')
+)
+
+churn_rate = merged_df.groupby('area code').mean().rename(columns={'churn': 'churn_rate'})
+
+# Target Encoding
+pd.concat([X_train["state"], y_train], axis=1).groupby("state").agg(
+    churn_rate=("churn", "mean")
+).sort_values(by="churn_rate", ascending=False)
+
+
+# Step 1: Calculate frequency encoding based on the training set
+target_encoding_state = (
+    pd.concat([X_train["state"], y_train], axis=1)
+    .groupby("state")
+    .agg(churn_rate=("churn", "mean"))
+)
+
+# Step 2: Map the frequencies back to the training and test sets
+X_train["state"] = X_train["state"].map(target_encoding_state["churn_rate"])
+X_test["state"] = X_test["state"].map(target_encoding_state["churn_rate"])
+X_train.head()
+
+
+
+# State is a categorical column with high cardinality: 51 Unique values
+# Extra Info: When you have high cardinality, some other things you can try are:
+
+# Frequency Encoding: This method assigns the frequency of each category as the encoded value. It helps capture the representation of each state without increasing dimensionality.
+
+# Hashing Encoding: This is useful for very high-cardinality data, as it hashes the categories into a fixed number of buckets.
+
+# One-Hot Encoding with Thresholding: For high cardinality, One-Hot Encoding could be expensive (increasing feature dimensionality). However, you can limit One-Hot Encoding to the most frequent states (e.g., top n states), and group the remaining states into an "Other" category.
+
+
+exclude_columns = ['state', 'area code', 'international plan', 'voice mail plan',
+       'binned_voicemail', 'binned_customer_service_calls', 'total_day_charge_per_minute',
+                   'total_eve_charge_per_minute', 'total_night_charge_per_minute',
+                   'total_intl_charge_per_minute']
+columns_to_scale = X_train.columns.difference(exclude_columns)
+
+# Apply Robust Scaler only on the specified columns
+scaler = RobustScaler()
+X_train[columns_to_scale] = scaler.fit_transform(X_train[columns_to_scale])
+X_test[columns_to_scale] = scaler.transform(X_test[columns_to_scale])
+X_train.head()
+
+
+
+
+from sklearn.ensemble import RandomForestClassifier
+# Create and fit the Random Forest model
+rf_model = RandomForestClassifier(n_estimators=500)
+rf_model.fit(X_train, y_train)
+
+# Get feature importance
+importance = rf_model.feature_importances_
+
+# Create a DataFrame for feature importance
+feature_importance_df = pd.DataFrame({
+    'Feature': X_train.columns,
+    'Importance': importance
+}).sort_values(by='Importance', ascending=False)
+
+# Plotting feature importance
+plt.figure(figsize=(10, 6))
+sns.barplot(x='Importance', y='Feature', data=feature_importance_df, palette='viridis')
+plt.title('Feature Importance in Churn Prediction')
+plt.xlabel('Importance Score')
+plt.ylabel('Features')
+plt.show()
+
+
+from sklearn.linear_model import LinearRegression
+
+
+
+
+# Save the Best Model
+joblib.dump(best_lgb_model, 'best_lgb_model.pkl')
+
+
+
+encoding_state = target_encoding_state.to_dict()['churn_rate']
+encoding_area_code = freq_encoding_area_code.to_dict()
+encoding_binned_csc = target_encoding_binned_csc.to_dict()['churn_rate']
+
+def encode(X):
+
+  # Map 'international plan' and 'voice mail plan'
+    X['international plan'] = X['international plan'].map({'no': 0, 'yes': 1})
+    X['voice mail plan'] = X['voice mail plan'].map({'no': 0, 'yes': 1})
+
+    # Target encoding for 'state'
+    X['state'] = X['state'].map(encoding_state)
+
+    # Frequency encoding for 'area code'
+    X['area code'] = X['area code'].map(encoding_area_code)
+
+    X['binned_customer_service_calls'] = pd.cut(X['customer service calls'], bins=[-1, 3, 5, np.inf], labels=['Low', 'Medium', 'High'])
+    X['binned_customer_service_calls'] = X['binned_customer_service_calls'].map(encoding_binned_csc)
+
+    return X
+
+def log_transform(X):
+    # Apply log transformation to 'total intl calls'
+    X['total_intl_calls_log'] = np.log1p(X['total intl calls'])
+
+    return X
+
+columns_to_drop = ['phone number', 'number vmail messages', 'total day minutes',
+                    'total eve minutes', 'total night minutes', 'total intl minutes',
+                   'customer service calls', 'total intl calls']
+
+columns_to_scale = ['account length', 'total day calls', 'total day charge',
+                    'total eve calls', 'total eve charge','total night calls',
+                      'total night charge','total intl charge']
+
+# Create the preprocessing pipeline
+preprocessing_pipeline = Pipeline(steps=[
+    ('encode', FunctionTransformer(encode)),
+    ('log_transform', FunctionTransformer(log_transform)),
+    ('drop_columns', FunctionTransformer(lambda df: df.drop(columns=columns_to_drop, errors='ignore'))),
+    ('scaling', ColumnTransformer([
+        ('scale', RobustScaler(), columns_to_scale)
+    ], remainder='passthrough'))
+])
+
+X = df_copy.drop(columns=['churn'])  # Drop the target column from the feature set
+y = df_copy['churn']  # Target variable
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+
+train_data = X_train.copy()
+
+# Fit the pipeline on training data
+preprocessing_pipeline.fit(train_data)
+
+
+
+# Load the trained best LightGBM model
+best_lgb_model = joblib.load('best_lgb_model.pkl')  # Load the model (replace with correct path)
+
+def predict_churn(new_data):
+    """
+    Predict whether a new customer will churn based on their feature values.
+
+    Args:
+    - new_data (pd.DataFrame): The new customer data
+
+    Returns:
+    - prediction (int): 1 if the customer is predicted to churn, 0 otherwise
+    """
+    # # Transform the new customer data
+    transformed_data = preprocessing_pipeline.transform(new_data)
+
+    column_order = ['account length', 'total day calls', 'total day charge',
+                    'total eve calls', 'total eve charge','total night calls',
+                    'total night charge', 'total intl charge', 'state',
+                    'area code','international plan', 'voice mail plan',
+        'binned_customer_service_calls', 'total_intl_calls_log']
+
+    # Create DataFrame for transformed data and reindex according to the specified column order
+    transformed_df = pd.DataFrame(transformed_data, columns=column_order)
+    common_columns = new_data.columns.intersection(transformed_df.columns)
+    transformed_df = transformed_df[common_columns]
+    # print(transformed_df)
+
+    preprocessed_data = transformed_df
+
+    # Use the LightGBM model to predict churn
+    prediction = best_lgb_model.predict(preprocessed_data)
+
+    return prediction
