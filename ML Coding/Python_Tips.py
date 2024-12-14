@@ -55,6 +55,141 @@ if a is None:
 # The is operator checks identity—whether a is the same object as None.
 # Why it's better: It’s explicit, Pythonic, and doesn’t rely on potentially overridden equality methods.
 
+
+################################################################
+#                        Collection
+################################################################
+# Collection = single 'variable' used to store multiple values
+
+# List  = [] ordered and changable. duplicates ok
+# Set   = {} unordered and immutable, but Add/Remove ok. NO DUPLICATES
+# tuple = () ordered and unchangable. duplicates ok, faster
+
+# LIST
+fruits = ['apple', 'banana', 'orange']
+print(dir(fruits))
+print(help(fruits))
+fruits[0] = 'pineapple'
+fruits.append()
+fruits.remove()
+fruits.insert(0, 'pineapple')
+fruits.sort()
+fruits.reverse()
+fruits.clear()
+fruits.index('apple')
+fruits.count('banana')
+
+
+def safe_index(lst, value):
+    try:
+        return lst.index(value)
+    except ValueError:
+        return -1  # or any default value
+
+fruits = ['banana', 'apple', 'cherry']
+index = safe_index(fruits, 'orange')
+print(index)  # Output: -1
+
+# SET
+fruits = {'apple', 'banana', 'orange'}
+fruits.add('pineapple')
+fruits.remove('apple')
+fruits.pop()  # randomly delete an element
+fruits.clear()
+
+# TUPLE
+fruits = ('apple', 'banana', 'orange')
+fruits.index('apple')
+fruits.count('pineapple')
+
+# dictionary =  a collection of {key:value} pairs
+#                       ordered and changeable. No duplicates
+
+capitals = {"USA": "Washington D.C.",
+                    "India": "New Delhi",
+                    "China": "Beijing",
+                    "Russia": "Moscow"}
+
+print(dir(capitals))
+print(help(capitals))
+print(capitals.get("Japan"))
+
+if capitals.get("Russia"):
+   print("That capital exists")
+else:
+   print("That capital doesn't exist")
+
+capitals.update({"Germany": "Berlin"})
+capitals.update({"USA": "Detroit"})
+capitals.pop("China")
+capitals.popitem()  # pop the lastest key-value pair that was inserted
+capitals.clear()
+
+keys = capitals.keys()
+for key in capitals.keys():
+  print(key)
+
+values = capitals.values()
+for value in capitals.values():
+print(value)
+
+items = capitals.items()
+for key, value in capitals.items():
+   print(f"{key}: {value}")
+
+######################
+
+# *args       = allows you to pass multiple non-key arguments
+# **kwargs    = allows you to pass multiple keyword-arguments
+#             * unpacking operator
+
+def shipping_label(*args, **kwargs):
+    for arg in args:
+        print(arg, end=" ")
+    print()
+
+    if "apt" in kwargs:
+        print(f"{kwargs.get('street')} {kwargs.get('apt')}")
+    elif "pobox" in kwargs:
+        print(f"{kwargs.get('street')}")
+        print(f"{kwargs.get('pobox')}")
+    else:
+        print(f"{kwargs.get('street')}")
+
+    print(f"{kwargs.get('city')}, {kwargs.get('state')} {kwargs.get('zip')}")
+
+shipping_label("Dr.", "Spongebob", "Squarepants",
+               street="123 Fake St.",
+               pobox="PO box #1001",
+               city="Detroit",
+               state="MI",
+               zip="54321")
+
+
+######################
+# Exercise: Don't modify the list when you are iterating it
+items = ['A', 'B', 'C', 'D', 'E']
+
+for item in items:
+    if item == 'B':
+        items.remove('B')
+    else:
+        print(item)
+
+# Output: ['A', 'D', 'E']
+
+# Correct way
+new_items = []
+
+for item in items:
+    if item == 'B':
+        continue
+    else:
+        print(item)
+        new_items.append(item)
+print(new_items)
+# Output: ['A', 'C', 'D', 'E']
+
 ################################################################
 #                        Decorator
 ################################################################
@@ -65,6 +200,11 @@ if a is None:
 
 
 
+################################################################
+#                        DS Project
+################################################################
+
+# https://github.com/everyday-data-science/Data_Science_Projects/blob/main/Sony%20Research/Data/Sony_Research.ipynb
 
 
 ####  Missing values
