@@ -258,6 +258,105 @@ number = random.randint(low, high)
 choice = random.choice(options)
 random.shuffle(cards)
 
+######################
+# Order in Function Calls:
+#
+# Positional arguments → Default arguments → *args → Keyword arguments → **kwargs.
+######################
+for number in range(1, 11):
+    print(number, end=" ")
+
+print("1", "2", "3", "4", "5", sep="-")
+
+######################
+# Iterables = An object/collection that can return its elements one at a time,
+#             allowing it to be iterated over in a loop
+my_list = [1, 2, 3, 4, 5]
+my_tuple = (1, 2, 3, 4, 5)
+my_set = {"apple", "orange", "banana", "coconut"}
+my_name = "Bro Code"
+my_dictionary = {'A': 1, 'B': 2, 'C': 3}
+
+######################
+# Membership operators = used to test whether a value or variable is found in a sequence
+#                       (string, list, tuple, set, or dictionary)
+#                       1. in
+#                       2. not in
+
+######################
+# List comprehension = A concise way to create lists in Python
+#                      Compact and easier to read than traditional loops
+#                      [expression for value in iterable if condition]
+
+######################
+# if _name_ == __main__: (this script can be imported OR run standalone)
+#                        Functions and classes in this module can be reused
+#                        without the main block of code executing
+#
+# Good practice (code is modular, helps readability, leaves no global variables, avoids unintended execution)
+#
+# Ex. library = Import library for functionality.  When running library directly, display a help page.
+
+
+def main():
+    pass
+
+if __name__ == '__main__':
+    main()
+
+################################################################
+#                   Object Oriented Programming
+################################################################
+
+# object = A "bundle" of related attributes (variables) and methods (functions)
+# Ex. phone, cup, book
+# You need a "class" to create many objects
+#
+# class  = (blueprint) used to design the structure and layout of an object
+
+class Car:
+    def __init__(self, model, year, color, for_sale):   # constructer method. dunder method
+        self.model = model   # RHS: Parameter, assign it to the object
+        self.year = year
+        self.color = color
+        self.for_sale = for_sale
+
+    def drive(self):
+        print(f"You drive the {self.color} {self.model}")
+
+    def stop(self):
+        print(f"You stop the {self.color} {self.model}")
+
+    def describe(self):
+        print(f"{self.year} {self.color} {self.model}")
+
+
+car1 = Car('Mustang', 2024, 'red', False)
+print(car1.model)  # .: attribute access operator
+
+
+# class variables = Shared among all instances of a class
+#                   Defined outside the constructor
+#                   Allow you to share data among all objects created from that class
+
+class Student:
+    class_year = 2024
+    num_students = 0
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        Student.num_students += 1
+
+
+student1 = Student('Alice', 25)
+print(student1.name)
+print(student1.age)
+print(student1.class_year) # Bad practice
+print(Student.class_year)  # Good practice
+
+print(f"My graduating class of {Student.class_year} has {Student.num_students} students")
+
 ################################################################
 #                        Decorator
 ################################################################
