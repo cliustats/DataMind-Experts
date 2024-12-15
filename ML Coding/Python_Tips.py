@@ -199,50 +199,6 @@ print(new_items)
 ######################
 # Scope resolution = (LEGB) local -> enclosed -> global -> built-in
 
-######################
-# super() = Function used in a child class to call methods from a parent class (superclass)
-#           Allows you to extend the functionality of the inherited methods
-
-
-class Shape:
-    def __init__(self, color, is_filled):
-        self.color = color
-        self.is_filled = is_filled
-
-    def describe(self):
-        print(f"It is {self.color} and {'filled' if self.is_filled else 'not filled'}")
-
-
-class Circle(Shape):
-    def __init__(self, color, is_filled, radius):
-        super().__init__(color, is_filled)
-        self.radius = radius
-
-    def describe(self):
-        super().describe()
-        print(f"It is a circle with an area of {3.14 * self.radius * self.radius}cm^2")
-
-
-class Square:
-    def __init__(self, color, is_filled, width):
-        super().__init__(color, is_filled)
-        self.width = width
-
-    def describe(self):
-        print(f"It is a square with an area of {self.width * self.width}cm^2")
-        super().describe()
-
-
-class Triangle:
-    def __init__(self, color, is_filled, width, height):
-        super().__init__(color, is_filled)
-        self.width = width
-        self.height = height
-
-    def describe(self):
-        print(f"It is a triangle with an area of {self.width * self.height / 2}cm^2")
-        super().describe()
-
 
 ######################
 import random
@@ -334,7 +290,7 @@ class Car:
 car1 = Car('Mustang', 2024, 'red', False)
 print(car1.model)  # .: attribute access operator
 
-
+##################################################################
 # class variables = Shared among all instances of a class
 #                   Defined outside the constructor
 #                   Allow you to share data among all objects created from that class
@@ -356,6 +312,196 @@ print(student1.class_year) # Bad practice
 print(Student.class_year)  # Good practice
 
 print(f"My graduating class of {Student.class_year} has {Student.num_students} students")
+
+
+##################################################################
+# Inheritance = Inherit attributes and methods from another class
+#               Helps with code reusability and extensibility
+#               class Child(Parent)
+#               class Sup(Super)
+
+class Animal:
+    def __init__(self, name):
+        self.name = name
+        self.is_alive = True
+
+    def eat(self):
+        print(f"{self.name} is eating")
+
+    def sleep(self):
+        print(f"{self.name} is sleeping")
+
+
+class Dog(Animal):
+    def speak(self):
+        print("Woof")
+
+
+class Cat(Animal):
+    def speak(self):
+        print("Meow")
+
+
+class Mouse(Animal):
+    def speak(self):
+        print("Squeek")
+
+
+dog = Dog("Scooby")
+cat = Cat("Garfield")
+mouse = Mouse("Micky")
+
+
+##################################################################
+# multiple inheritance = inherit from more than one parent class
+#                        C(A, B)
+# multilevel inheritance = inherit from a parent which inherit from another parent
+#                        C(B) <- B(A) <- A
+
+class Animal:
+    def __init__(self, name):
+        self.name = name
+
+    def eat(self):
+        print(f"{self.name} is eating")
+
+    def sleep(self):
+        print(f"{self.name} is sleeping")
+
+
+class Prey(Animal):
+    def flee(self):
+        print(f"{self.name} is fleeing")
+
+
+class Predator(Animal):
+    def hunt(self):
+        print(f"{self.name} is hunting")
+
+
+class Rabbit(Prey):
+    pass
+
+
+class Hawk(Predator):
+    pass
+
+
+class Fish(Prey, Predator):
+    pass
+
+
+rabbit = Rabbit("Bugs")
+hawk = Hawk("Tony")
+fish = Fish("Nemo")
+
+rabbit.hunt()
+
+
+##################################################################
+# Abstract class: A class that cannot be instantiated on its own; Meant to be subclassed.
+#                 They can contain abstract methods, which are declared but have no implementation.
+#                 Abstract classes benefits:
+#                 1. Prevents instantiation of the class itself
+#                 2. Requires children to use inherited abstract methods
+# Abstract base classes define a blueprint for subclasses, requiring them to implement specific methods.
+# Any class with at least one @abstractmethod cannot be instantiated directly.
+
+
+from abc import ABC, abstractmethod
+
+class Vehicle(ABC):
+    @abstractmethod
+    def go(self):
+        pass
+
+    @abstracmethod
+    def stop(self):
+        pass
+
+
+class Car(Vehicle):
+    def go(self):
+        print("You drive the car")
+
+    def stop(self):
+        print("You stop the car")
+
+
+class Motorcycle(Vehicle):
+    def go(self):
+        print("You ride the motorcycle")
+
+    def stop(self):
+        print("You stop the motorcycle")
+
+
+class Boat(Vehicle):
+    def go(self):
+        print("You sail the boat")
+
+    def stop(self):
+        print("You anchor the boat")
+
+##################################################################
+# super() = Function used in a child class to call methods from a parent class (superclass)
+#           Allows you to extend the functionality of the inherited methods
+
+
+class Shape:
+    def __init__(self, color, is_filled):
+        self.color = color
+        self.is_filled = is_filled
+
+    def describe(self):
+        print(f"It is {self.color} and {'filled' if self.is_filled else 'not filled'}")
+
+
+class Circle(Shape):
+    def __init__(self, color, is_filled, radius):
+        super().__init__(color, is_filled)
+        self.radius = radius
+
+    def describe(self):
+        super().describe()
+        print(f"It is a circle with an area of {3.14 * self.radius * self.radius}cm^2")
+
+
+class Square:
+    def __init__(self, color, is_filled, width):
+        super().__init__(color, is_filled)
+        self.width = width
+
+    def describe(self):
+        print(f"It is a square with an area of {self.width * self.width}cm^2")
+        super().describe()
+
+
+class Triangle:
+    def __init__(self, color, is_filled, width, height):
+        super().__init__(color, is_filled)
+        self.width = width
+        self.height = height
+
+    def describe(self):
+        print(f"It is a triangle with an area of {self.width * self.height / 2}cm^2")
+        super().describe()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ################################################################
 #                        Decorator
