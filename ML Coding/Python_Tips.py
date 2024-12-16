@@ -653,11 +653,149 @@ company2.add_employee("Karen", "Assistant")
 for employee in company2.list_employees():
     print(employee)
 
-################################################################
-#                        Decorator
-################################################################
+
+##################################################################
+# Static methods = A method that belong to a class rather than any object from that class (instance)
+#                  Usually used for general utility functions
+#
+# Instance methods - Best for operations on instances of the class (objects)
+# Static methods - Best for utility functions that do not need access to class data
+class Employee:
+    def __init__(self, name, position):
+        self.name = name
+        self.position = position
+
+    #INSTANCE METHOD
+    def get_info(self):
+        return f"{self.name} = {self.position}"
+
+    @staticmethod
+    def is_valid_position(position):
+        valid_positions = ["Manager", "Cashier", "Cook", "Janitor"]
+        return position in valid_positions
 
 
+print(Employee.is_valid_position("Rocket Scientist"))
+
+##################################################################
+# Class methods = Allow operations related to the class itself
+#                 Take (cls) as the first parameter, which represents the class itself.
+#
+# Instance methods = Best for operations on instances of the class (objects)
+# Static methods = Best for utility functions that do not need access to class data
+# Class methods = Best for class-level data or require access to the class itself
+class Student:
+    count = 0
+    total_gpa = 0
+
+    def __init__(self, name, gpa):
+        self.name = name
+        self.gpa = gpa
+        Student.count += 1
+        Student.total_gpa += gpa
+
+    # INSTANCE METHOD
+    def get_info(self):
+        return f"{self.name} {self.gpa}"
+
+    @classmethod
+    def get_count(cls):
+        return f"Total # of students: {cls.count}"
+
+    @classmethod
+    def get_average_gpa(cls):
+        if cls.count == 0:
+            return 0
+        else:
+            return f"Average gpa: {cls.total_gpa / cls.count:.2f}"
+
+
+student1 = Student("Spongebob", 3.2)
+student2 = Student("Patrick", 2.0)
+student3 = Student("Sandy", 4.0)
+
+print(Student.get_count())
+print(Student.get_average_gpa())
+
+##################################################################
+# Magic methods = Dunder methods (double underscore) __init__, __str__, __eq__
+# They are automatically called by many of Python's built-in operations.
+# They allow developers to define or customize the behavior of objects
+
+##################################################################
+# @property = Decorator used to define a method as a property
+#                          (it can be accessed like an attribute)
+# Benefit: Add additional logic when read, write, or delete attributes
+# Gives you getter, setter, and deleter method
+# https://www.youtube.com/watch?v=HkbQ_NaH0Lc&list=PLZPZq0r_RZOOkUQbat8LyQii36cJf2SWT&index=61
+
+class Rectangle:
+    def __init__(self, width, height):
+        self._width = width
+        self._height = height
+
+    @property
+    def width(self):
+        return f"{self._width:.1f}cm"
+
+    @property
+    def height(self):
+        return f"{self._height:.1f}cm"
+
+    @width.setter
+    def width(self, new_width):
+        if new_width > 0:
+            self._width = new_width
+        else:
+            print("Width must be greater than zero")
+
+    @height.setter
+    def height(self, new_height):
+        if new_height > 0:
+            self._height = new_height
+        else:
+            print("Height must be greater than zero")
+
+    @width.deleter
+    def width(self):
+        del self._width
+        print("Width has been deleted")
+
+    @height.deleter
+    def height(self):
+        del self._height
+        print("Height has been deleted")
+
+
+rectangle = Rectangle(3, 4)
+
+################################################################
+# Decorator = A function that extends the behavior of another function
+#             w/o modifying the base function
+#             Pass the base function as an argument to the decorator
+def add_sprinkles(func):
+    def wrapper(*args, **kwargs):
+        print("*You add sprinkles 🎊*")
+        func(*args, **kwargs)
+
+    return wrapper
+
+
+def add_fudge(func):
+    def wrapper(*args, **kwargs):
+        print("*You add fudge 🍫*")
+        func(*args, **kwargs)
+
+    return wrapper
+
+
+@add_sprinkles
+@add_fudge
+def get_ice_cream(flavor):
+    print(f"Here is your {flavor} ice cream 🍨")
+
+
+get_ice_cream("vanilla")
 
 
 
