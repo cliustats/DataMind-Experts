@@ -10,7 +10,37 @@
 
 
 # Debug ----- pdb
+# The cd command is used to change the current working directory
+$ cd # cd .. back up one ditectory
+$ ls -l # show the size
+$ ls -a # list all files, including hidden ones, in a directory
+$ pwd # print working directory
+$ mkdir # create new directories
+$ mkdir -p projects/first_project # create a directory with sub-directories
+$ rmdir projects # remove empty directories
+$ rm -rf projects # remove non-empty directories
+$ mv ~/Downloads/pic.png ~/Documents/Photo/pic.png # move
+$ cp ~/Downloads/pic.png ~/Documents/Photography  # copy
+$ cat #(concatenate), read data from a specified file and print the output.
+$ less #terminal pager that outputs the content of the specified file one screen at a time.
+$ find / -name 'my_file.txt' # find.  / home directory
 
+ls -l | grep ".py"
+# Lists all files with detailed info (ls -l) and filters
+# only files containing .py in their names.
+&&
+#purpose of the && operator in the shell.
+#Runs the second command only if the first command succeeds.
+echo $((5 + 3))
+# Outputs the result of the arithmetic operation: 8
+cat file.txt | sort | uniq -c | sort -nr
+# Reads file.txt, sorts the lines, counts unique occurrences,
+# and sorts by count in descending order.
+chmod: Changes file permissions.
+chown: Changes file ownership.
+du -sh <directory_name> # disk usage of a directory
+du -h data.csv # check the size of a file
+ps aux # Displays detailed information about all running processes.
 
 ################################################################
                         Virtual Environment
@@ -18,7 +48,9 @@
 
 #!/bin/bash
 
-mkdir
+# Isolates dependencies for each project.
+# Prevents conflicts between package versions.
+# Makes projects more portable and reproducible.
 
 venv   # storing the things related to virtual environment
 
@@ -45,6 +77,33 @@ my_env/bin/activate
 
 pip install -r requirements.txt     ##  -r :  install from a file
 
+
+##########################
+# Reading a file
+with open('example.txt', 'r') as file:
+    content = file.read()
+    print(content)
+
+with open('example.txt', 'w') as file:
+    file.write('Hello, World!\n')
+    file.write('This is a new line.')
+
+# Appending to a file
+with open('example.txt', 'a') as file:
+    file.write('\nThis line is appended.')
+
+# Reading a file line by line
+with open('example.txt', 'r') as file:
+    for line in file:
+        print(line.strip())  # Removes extra newlines
+
+# Reading a File Safely (Catching Exceptions)
+try:
+    with open('example.txt', 'r') as file:
+        content = file.read()
+        print(content)
+except FileNotFoundError:
+    print('The file does not exist!')
 
 
 ################################################################
@@ -74,6 +133,72 @@ def error_handler(func):
 def divide(a, b):
 
 
+################################################################
+#                          Unit test
+################################################################
+# -- vector
+#    --- vector.py    # main python file
+#    --- __init__.py  # make the folder to a package
+# -- tests
+#    --- test_vector.py
+#    --- __init__.py
+
+# vector.py
+class Vector:
+    def __init__(self, x, y):
+        if isintance(x, (int, float)) and \
+           isintance(y, (int, float)):
+            self.x = x
+            self.y = y
+        else:
+            raise ValueError("Not a number")
+
+    def add(self, other):
+        return Vector(self.x + other.x,
+                      self.y + other.y)
+
+
+# test_vector.py
+import sys
+import unittest
+from vector import Vector
+
+class TestVector(unittest.TestCase):
+    # def setUp(self):
+    #     print("start")
+    @classmethod
+    def setUpClass(cls):
+        print("start")
+
+    def tearDown(self):
+        print("End")
+
+    def test_init(self):   # have to start with test_
+        v = Vector(1, 2)
+        self.assertEqual(v.x, 1)
+        self.assertEqual(v.y, 1)
+
+        with self.assertRaises(ValueError):
+            v = Vector("1", "2")
+
+
+    @unittest.skipIf(sys.platform == 'win32', "Do not support Windows")
+    def test_add(self):
+        v1 = Vector(1, 2)
+        v2 = Vector(2, 3)
+        v3 = v1.add(v2)
+        self.assertEqual(v3.x, 3)
+
+
+# shell: python3 -m unittest
+# shell: python3 -m unittest tests.test_vector.TestVector.test_add
+
+
+# assertEqual(a, b) # when fails, gives more info
+# assertNotEqual(a, b)
+# assertTrue(x)     # when fails, True != False
+# assertFalse(x)
+# assertIs(a, b)
 ################################################################
                              Class
 ################################################################
