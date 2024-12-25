@@ -37,7 +37,6 @@ def my_dense(a_in, W, b):
     return a_out
 
 
-
 def my_sequencial(x, W1, b1, W2, b2):
     a1 = my_dense(x, W1, b1)
     a2 = my_dense(a1, W2, b2)
