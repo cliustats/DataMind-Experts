@@ -11,7 +11,6 @@
  import utils
 
 
-
  data = ...
 
  x = data[:, 0]

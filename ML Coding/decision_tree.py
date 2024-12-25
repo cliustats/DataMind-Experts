@@ -7,6 +7,7 @@ def entropy(p):
     else:
         return -p * np.log2(p) - (1-p) * np.log2(1-p)
 
+
 def split_indices(X, index_feature):
     """Given a dataset and a index feature, return two lists for the two split nodes, the left node has the animals that have
     that feature = 1 and the right node those that have the feature = 0
