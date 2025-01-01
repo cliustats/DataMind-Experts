@@ -40,8 +40,7 @@ def my_dense(a_in, W, b):
 def my_sequencial(x, W1, b1, W2, b2):
     a1 = my_dense(x, W1, b1)
     a2 = my_dense(a1, W2, b2)
-    return a2  
-
+    return a2
 
 def my_predict(X, W1, b1, W2, b2):
     m = X.shape[0]
@@ -49,8 +48,6 @@ def my_predict(X, W1, b1, W2, b2):
     for i in range(m):
         p[i, 0] = my_sequencial(X[i], W1, b1, W2, b2)
     return p
-
-
 
 
 def my_softmax(z):
