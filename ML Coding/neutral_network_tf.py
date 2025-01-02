@@ -56,3 +56,5 @@ def my_softmax(z):
     return sm
 
 print("Decisions = \n {y_hat}")
+
+# how to build a personal website using github?
