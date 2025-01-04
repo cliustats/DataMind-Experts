@@ -42,6 +42,7 @@ def my_sequencial(x, W1, b1, W2, b2):
     a2 = my_dense(a1, W2, b2)
     return a2
 
+
 def my_predict(X, W1, b1, W2, b2):
     m = X.shape[0]
     p = np.zeros((m,1))
