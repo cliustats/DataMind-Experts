@@ -3,8 +3,6 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
 
-
-
 model = Sequential([
     Dense(units=3, activation='sigmoid'),
     Dense(units=1, activation='Relu')
@@ -15,7 +13,6 @@ model.compile(
     loss = tf.keras.lossed.BinaryCrossentropy(),
     optimizer = tf.optimizers.Adam(learning_rate=0.01),
 )
-
 
 
 def my_dense(a_in, W, b):
@@ -58,5 +55,6 @@ def my_softmax(z):
 
 
 print("Decisions = \n {y_hat}")
+
 
 # how to build a personal website using github?
