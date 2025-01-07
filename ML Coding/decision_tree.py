@@ -39,10 +39,8 @@ def weighted_entropy(X, y, left_indices, right_indices):
     return weighted_entropy
 
 
-
 left_indices, right_indices = split_indices(X_train, 0)
 weighted_entropy(X_train, y_train, left_indices, right_indices)
-
 
 def information_gain(X, y, left_indices, right_indices):
     """
@@ -52,11 +50,6 @@ def information_gain(X, y, left_indices, right_indices):
     h_node = entropy(p_node)
     w_entropy = weighted_entropy(X, y, left_indices, right_indices)
     return h_node - w_entropy
-
-
-
-
-
 
 
 # One hot encoding

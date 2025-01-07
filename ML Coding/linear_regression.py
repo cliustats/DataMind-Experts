@@ -14,7 +14,7 @@ class LinearRegression:
         self.intercept = None
 
     def fit(self, X, y):
-        n = len(X)   
+        n = len(X)
         x_mean = np.mean(X)
         y_mean = np.mean(y)
         numerator = 0
@@ -79,7 +79,6 @@ print(lr.W)
 X_new = np.array([10, 11], [12, 13])
 y_pred = lr.predict(X_new)
 print(y_pred)
-
 
 
 #######   improvements on simple LR   ########
