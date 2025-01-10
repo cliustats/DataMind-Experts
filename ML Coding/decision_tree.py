@@ -51,7 +51,6 @@ def information_gain(X, y, left_indices, right_indices):
     w_entropy = weighted_entropy(X, y, left_indices, right_indices)
     return h_node - w_entropy
 
-
 # One hot encoding
 
 df = pd.read_csv('...')
