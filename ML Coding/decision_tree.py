@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def entropy(p):
     if p == 0 or p == 1:
         return 0
@@ -101,7 +100,6 @@ from xgboost import XGBClassifier
 # Each successive round's evaluation metric is compared to the best metric. If the model goes 10 rounds where none have a better metric than the best one, then the model stops training.
 # The model is returned at its last state when training terminated, not its state during the best round. For example, if the model stops at round 26, but the best round was 16, the model's training state at round 26 is returned, not round 16.
 # Note that this is different from returning the model's "best" state (from when the evaluation metric was the lowest).
-
 
 
 xgb_model = XGBClassifier(n_estimators = 500,
