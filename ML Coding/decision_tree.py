@@ -101,7 +101,6 @@ from xgboost import XGBClassifier
 # The model is returned at its last state when training terminated, not its state during the best round. For example, if the model stops at round 26, but the best round was 16, the model's training state at round 26 is returned, not round 16.
 # Note that this is different from returning the model's "best" state (from when the evaluation metric was the lowest).
 
-
 xgb_model = XGBClassifier(n_estimators = 500,
                           learning_rate = 0.1,
                           verbosity = 1,
