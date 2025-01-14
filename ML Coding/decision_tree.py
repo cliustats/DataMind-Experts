@@ -116,7 +116,6 @@ xgb_model.fit(X_train_fit, y_train_fit,
 
 xgb_model.best_iteration
 
-
 # The best round of training was round 16, with a log loss of 4.3948.
 #
 # For 10 rounds of training after that (from round 17 to 26), the log loss was higher than this.
