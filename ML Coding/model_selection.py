@@ -10,7 +10,6 @@
 
  import utils
 
-
  data = ...
 
  x = data[:, 0]
@@ -26,7 +25,6 @@ x_cv, x_test, y_cv, y_test = train_test_split(x_, y_, test_size=0.5, random_stat
 
 # Delete temporary variables
 del x_, y_
-
 
 ## Fit a liner model
 scaler_linear = StandardScaler()
