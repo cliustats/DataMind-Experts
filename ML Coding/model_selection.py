@@ -80,3 +80,96 @@ yhat = model_bc[model_num-1].predict(x_bc_test_scaled)
 yhat = tf.math.sigmoid(yhat)
 yhat = np.where(yhat >= threshold, 1, 0)
 nn_test_error = np.mean(yhat != y_bc_test)
+
+
+
+
+
+
+
+
+# Transformer
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class ScaledDotProductAttention(nn.Module):
+    def __init__(self, d_k):
+        super(ScaledDotProductAttention, self).__init__()
+        self.scale = torch.sqrt(torch.tensor(d_k, dtype=torch.float))
+
+    def forward(self, Q, K, V, mask=None):
+        attn_weights = torch.matmul(Q, K.transpose(-2, -1)) / self.scale
+        if mask is not None:
+            attn_weights = attn_weights.masked_fill(mask == 0, -1e9)
+        attn_weights = F.softmax(attn_weights, dim=-1)
+        output = torch.matmul(attn_weights, V)
+        return output, attn_weights
+
+class MultiHeadAttention(nn.Module):
+    def __init__(self, d_model, num_heads):
+        super(MultiHeadAttention, self).__init__()
+        assert d_model % num_heads == 0, "d_model must be divisible by num_heads"
+        self.d_k = d_model // num_heads
+        self.num_heads = num_heads
+
+        self.W_q = nn.Linear(d_model, d_model)
+        self.W_k = nn.Linear(d_model, d_model)
+        self.W_v = nn.Linear(d_model, d_model)
+        self.fc = nn.Linear(d_model, d_model)
+        self.attention = ScaledDotProductAttention(self.d_k)
+
+    def forward(self, Q, K, V, mask=None):
+        batch_size = Q.size(0)
+        Q = self.W_q(Q).view(batch_size, -1, self.num_heads, self.d_k).transpose(1, 2)
+        K = self.W_k(K).view(batch_size, -1, self.num_heads, self.d_k).transpose(1, 2)
+        V = self.W_v(V).view(batch_size, -1, self.num_heads, self.d_k).transpose(1, 2)
+
+        output, attn_weights = self.attention(Q, K, V, mask)
+        output = output.transpose(1, 2).contiguous().view(batch_size, -1, self.num_heads * self.d_k)
+        output = self.fc(output)
+        return output, attn_weights
+
+class FeedForward(nn.Module):
+    def __init__(self, d_model, d_ff):
+        super(FeedForward, self).__init__()
+        self.fc1 = nn.Linear(d_model, d_ff)
+        self.fc2 = nn.Linear(d_model, d_model)
+
+    def forward(self, x):
+        return self.fc2(F.relu(self.fc1(x)))
+
+class TransformerBlock(nn.Module):
+    def __init__(self, d_model, num_heads, d_ff, dropout=0.1):
+        super(TransformerBlock, self).__init__()
+        self.attention = MultiHeadAttention(d_model, num_heads)
+        self.norm1 = nn.LayerNorm(d_model)
+        self.ff = FeedForward(d_model, d_ff)
+        self.norm2 = nn.LayerNorm(d_model)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x, mask=None):
+        attn_output, _ = self.attention(x, x, x, mask)
+        x = self.norm1(x + self.dropout(attn_output))
+        ff_output = self.ff(x)
+        x = self.norm2(x + self.dropout(ff_output))
+        return x
+
+class Transformer(nn.Module):
+    def __init__(self, d_model, num_heads, d_ff, num_layers, vocab_size, max_seq_len, dropout=0.1):
+        super(Transformer, self).__init__()
+        self.embedding = nn.Embedding(vocab_size, d_model)
+        self.positional_encoding = nn.Parameter(torch.zeros(1, max_seq_len, d_model))
+        self.layers = nn.ModuleList([TransformerBlock(d_model, num_heads, d_ff, dropout) for _ in range(num_layers)])
+        self.fc_out = nn.Linear(d_model, vocab_size)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x, mask=None):
+        seq_len = x.size(1)
+        x = self.embedding(x) + self.positional_encoding[:, :seq_len, :]
+        x = self.dropout(x)
+        for layer in self.layers:
+            x = layer(x, mask)
+        output = self.fc_out(x)
+        return output
