@@ -81,7 +81,6 @@ yhat = tf.math.sigmoid(yhat)
 yhat = np.where(yhat >= threshold, 1, 0)
 nn_test_error = np.mean(yhat != y_bc_test)
 
-
 # Transformer
 
 import torch
