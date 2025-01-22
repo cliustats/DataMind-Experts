@@ -87,6 +87,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
 class ScaledDotProductAttention(nn.Module):
     def __init__(self, d_k):
         super(ScaledDotProductAttention, self).__init__()
@@ -99,6 +100,7 @@ class ScaledDotProductAttention(nn.Module):
         attn_weights = F.softmax(attn_weights, dim=-1)
         output = torch.matmul(attn_weights, V)
         return output, attn_weights
+
 
 class MultiHeadAttention(nn.Module):
     def __init__(self, d_model, num_heads):
@@ -124,6 +126,7 @@ class MultiHeadAttention(nn.Module):
         output = self.fc(output)
         return output, attn_weights
 
+
 class FeedForward(nn.Module):
     def __init__(self, d_model, d_ff):
         super(FeedForward, self).__init__()
@@ -132,6 +135,7 @@ class FeedForward(nn.Module):
 
     def forward(self, x):
         return self.fc2(F.relu(self.fc1(x)))
+
 
 class TransformerBlock(nn.Module):
     def __init__(self, d_model, num_heads, d_ff, dropout=0.1):
@@ -148,6 +152,7 @@ class TransformerBlock(nn.Module):
         ff_output = self.ff(x)
         x = self.norm2(x + self.dropout(ff_output))
         return x
+
 
 class Transformer(nn.Module):
     def __init__(self, d_model, num_heads, d_ff, num_layers, vocab_size, max_seq_len, dropout=0.1):
