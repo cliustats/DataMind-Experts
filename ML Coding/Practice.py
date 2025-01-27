@@ -7,8 +7,6 @@
   3) Change the architecture. reduce the hidden layers, or transformer with skip connections
 
 
-
-
 # Debug ----- pdb
 # The cd command is used to change the current working directory
 $ cd # cd .. back up one ditectory
